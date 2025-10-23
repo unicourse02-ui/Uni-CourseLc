@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name ="MainColor">#1C41AF</color>
+    <color name="deep_blue">#2E3AA1</color>
+    <color name = "SearchBAr">#f0ebee</color>
+    <color name = "yellw">#FFD700</color>
+
+
+</resources>

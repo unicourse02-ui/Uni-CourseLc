@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "636969934459",
+    "project_id": "uni-courselc",
+    "storage_bucket": "uni-courselc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:636969934459:android:554259fb07dbd0cfe00cde",
+        "android_client_info": {
+          "package_name": "com.example.uni_courselc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwnC8N0kvD3YcxaTn1e_tMz4v69P15_bM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
