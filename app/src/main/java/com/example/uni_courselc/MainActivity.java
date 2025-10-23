@@ -22,6 +22,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
+
     DatabaseReference databaseRef;
     Button btnLogin;
     EditText UserName, PassWord;
