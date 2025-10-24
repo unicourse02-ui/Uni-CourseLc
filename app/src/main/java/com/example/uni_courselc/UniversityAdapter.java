@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.ViewHolder> {
@@ -34,9 +36,9 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Universities universities = universitieslist.get(position);
         holder.universityname.setText(universities.getName());
-        holder.img.setImageResource(universities.getImg());
         holder.ratings.setText(String.valueOf(universities.getRatings()));
         holder.rate.setRating(universities.getStars());
+        Glide.with(context).load(universities.getImg()).into(holder.img);
     }
 
     @Override

@@ -27,6 +27,9 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -35,7 +38,7 @@ public class Filter_Page extends AppCompatActivity {
     List<ChipGroup> chipgroup = new ArrayList<>();
 
     FirebaseFirestore data;
-
+    DatabaseReference dataref;
     List<String> Raw_Courses = new ArrayList<>();
     List<String> Raw_Courses2 = new ArrayList<>();
     List<String> Selected_Course = new ArrayList<>();
@@ -57,6 +60,7 @@ public class Filter_Page extends AppCompatActivity {
         LinearLayout linear = findViewById(R.id.linear);
         data = FirebaseFirestore.getInstance();
         btn = findViewById(R.id.filerButton);
+
 
         data.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
 
@@ -124,14 +128,22 @@ public class Filter_Page extends AppCompatActivity {
                 }
 
             }
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent  = new Intent(Filter_Page.this, LandingPage.class);
-                    intent.putStringArrayListExtra("selecteCourse", new ArrayList<>(Selected_Course));
-                    startActivity(intent);
-                }
+            Intent intent2 = getIntent();
+            String user = intent2.getStringExtra("username");
+            btn.setOnClickListener(v -> {
+                DatabaseReference dbRef = FirebaseDatabase.getInstance()
+                        .getReference("users")
+                        .child(user)
+                        .child("selectedCourses");
+
+                dbRef.setValue(Selected_Course);
+                Intent intent = new Intent(Filter_Page.this, LandingPage.class);
+                intent.putStringArrayListExtra("SelectedCourses", new ArrayList<>(Selected_Course));
+                intent.putExtra("userId", user);
+                startActivity(intent);
+
             });
+
 
             choice_counter();
 

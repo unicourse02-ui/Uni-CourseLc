@@ -2,12 +2,12 @@ package com.example.uni_courselc;
 
 public class Universities {
     private String name;
-    private int img;
+    private String img;
     private  int ratings;
 
     private int stars;
 
-    public Universities(String name, int img, int ratings, int stars){
+    public Universities(String name, String img, int ratings, int stars){
 
         this.name = name;
         this.img = img;
@@ -42,11 +42,11 @@ public class Universities {
         this.name = name;
     }
 
-    public int getImg() {
+    public String getImg() {
         return img;
     }
 
-    public void setImg(int img) {
+    public void setImg(String img) {
         this.img = img;
     }
 }

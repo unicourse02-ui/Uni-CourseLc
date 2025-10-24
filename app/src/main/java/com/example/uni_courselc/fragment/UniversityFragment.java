@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,46 +18,102 @@ import com.example.uni_courselc.UniversityAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class UniversityFragment extends Fragment {
     RecyclerView recyle;
     UniversityAdapter adapter;
 
+    FirebaseFirestore data;
     List<Universities> uniersitieList = new ArrayList<>();
 
+    FirebaseFirestore firestore;
+    DatabaseReference realtimeRef;
+
+    private List<String>  selectedCourses = new ArrayList<>();
+    private  List<String> userData = new ArrayList<>();
+    String userId;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_university, container, false);
 
-
-        View view = inflater.inflate(R.layout.fragment_university,container,false);
-
-        uniersitieList.add(new Universities("Taguig College University",R.drawable.tcu,250,4));
-        uniersitieList.add(new Universities("polytechnic University of the philippines ", R.drawable.pup,250,4));
-        uniersitieList.add(new Universities("Fisher Valley",R.drawable.visher,250,4));
-        uniersitieList.add(new Universities("Technological University of the Philippines",R.drawable.tup,250,4));
-        uniersitieList.add(new Universities("Taguig College University",R.drawable.tcu,250,4));
-        uniersitieList.add(new Universities("polytechnic University of the philippines ", R.drawable.pup,250,4));
-        uniersitieList.add(new Universities("Fisher Valley",R.drawable.visher,250,4));
-        uniersitieList.add(new Universities("Technological University of the Philippines",R.drawable.tup,250,4));
-
+        firestore = FirebaseFirestore.getInstance();
+        realtimeRef = FirebaseDatabase.getInstance().getReference("users");
 
         recyle = view.findViewById(R.id.recycleUniversty);
         recyle.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        adapter = new UniversityAdapter(uniersitieList,getContext());
+        adapter = new UniversityAdapter(uniersitieList, getContext());
         recyle.setAdapter(adapter);
 
 
 
+        if (getArguments() != null) {
+            selectedCourses = getArguments().getStringArrayList("SelectedCourses");
+            userId = getArguments().getString("userId");
+        }
 
-        return  view;
+        Log.d("FragmentData", "UserID: " + userId + " SelectedCourses: " + selectedCourses);
 
 
 
+        filter();
 
 
+        return view;
     }
+
+    public void filter() {
+        uniersitieList.clear();
+
+        firestore.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot data : queryDocumentSnapshots) {
+                String name = data.getString("Name");
+                String image = data.getString("ImgUrl");
+
+                Double ratedouble = data.getDouble("rating");
+                Double stardouble = data.getDouble("star");
+
+                int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
+                int star = (stardouble != null) ? stardouble.intValue() : 0;
+
+
+                Object coursesObj = data.get("Course");
+                List<String> courses_offered = new ArrayList<>();
+                if (coursesObj instanceof List<?>) {
+                    for (Object o : (List<?>) coursesObj) {
+                        courses_offered.add(String.valueOf(o));
+                    }
+                }
+
+                boolean hasCourse = false;
+                if (selectedCourses != null && !selectedCourses.isEmpty()) {
+                    for (String selected : selectedCourses) {
+                        if (courses_offered.contains(selected)) {
+                            hasCourse = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (hasCourse) {
+                    uniersitieList.add(new Universities(name, image, star, rating));
+                }
+            }
+
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+
+
+
+
+
 }
