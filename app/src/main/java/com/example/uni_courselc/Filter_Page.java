@@ -170,7 +170,7 @@ public class Filter_Page extends AppCompatActivity {
         }
 
 
-        btn.setText(counter + " of " + total + "  Selected");
+        btn.setText(counter + " of " + total + " Selected");
 
 
 
