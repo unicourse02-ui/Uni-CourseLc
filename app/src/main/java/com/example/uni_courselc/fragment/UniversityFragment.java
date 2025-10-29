@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.uni_courselc.R;
 import com.example.uni_courselc.Universities;
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class UniversityFragment extends Fragment {
     RecyclerView recyle;
+
     UniversityAdapter adapter;
 
     FirebaseFirestore data;
@@ -53,14 +55,11 @@ public class UniversityFragment extends Fragment {
         recyle.setAdapter(adapter);
 
 
+        selectedCourses = getArguments().getStringArrayList("SelectedCourses");
+        userId = getArguments().getString("userId");
 
-        if (getArguments() != null) {
-            selectedCourses = getArguments().getStringArrayList("SelectedCourses");
-            userId = getArguments().getString("userId");
-        }
 
         Log.d("FragmentData", "UserID: " + userId + " SelectedCourses: " + selectedCourses);
-
 
 
         filter();
@@ -82,7 +81,6 @@ public class UniversityFragment extends Fragment {
 
                 int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
                 int star = (stardouble != null) ? stardouble.intValue() : 0;
-
 
                 Object coursesObj = data.get("Course");
                 List<String> courses_offered = new ArrayList<>();

@@ -21,8 +21,7 @@ public class ViewerPageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Fragment fragment = new UniversityFragment();
-        fragment.setArguments(bundle);
+
         switch (position){
 
             case 0:
@@ -30,7 +29,9 @@ public class ViewerPageAdapter extends FragmentStateAdapter {
                 uniFragment.setArguments(bundle);
                 return uniFragment;
             case 1:
-                return  new CoursesFragment();
+                CoursesFragment course =  new CoursesFragment();
+                course.setArguments(bundle);
+                return  course;
             default:
                 return  new UniversityFragment();
 

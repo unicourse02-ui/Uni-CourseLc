@@ -133,8 +133,7 @@ public class Filter_Page extends AppCompatActivity {
             btn.setOnClickListener(v -> {
                 DatabaseReference dbRef = FirebaseDatabase.getInstance()
                         .getReference("users")
-                        .child(user)
-                        .child("selectedCourses");
+                        .child(user).child("selectedCourses");
 
                 dbRef.setValue(Selected_Course);
                 Intent intent = new Intent(Filter_Page.this, LandingPage.class);

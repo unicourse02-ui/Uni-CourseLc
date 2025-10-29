@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".fragment.UniversityFragment"
     android:background="@drawable/bg4"
+
     >
 
    <androidx.recyclerview.widget.RecyclerView

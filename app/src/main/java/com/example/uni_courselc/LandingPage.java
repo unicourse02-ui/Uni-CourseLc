@@ -1,7 +1,11 @@
 package com.example.uni_courselc;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +14,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.uni_courselc.fragment.CoursesFragment;
 import com.example.uni_courselc.fragment.UniversityFragment;
 import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
 public class LandingPage extends AppCompatActivity {
     TabLayout tab;
     ViewPager2 viewPager2;
+    TextView usr_Name, greet;
+
+    ImageView homexml;
+
+
 
 
     @Override
@@ -31,20 +43,51 @@ public class LandingPage extends AppCompatActivity {
             return insets;
         });
 
+
         ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
         String user = getIntent().getStringExtra("userId");
+
+
+
+
+        User_Data userDAta = new User_Data();
+
+        userDAta.getData(user, new User_Data.getDatauser() {
+            @Override
+            public void onSuccess(String Data) {
+                usr_Name = findViewById(R.id.name);
+
+                usr_Name.setText(Data);
+                usr_Name.setTextSize(20);
+                usr_Name.setTypeface(null, Typeface.BOLD);
+
+            }
+
+            @Override
+            public void failed(String Data) {
+                Log.d("nope","nope");
+
+            }
+        });
+
+        Clock clock = new Clock();
+
+        greet = findViewById(R.id.greeter);
+
+        greet.setText(clock.setGreet());
+        clock.testing();
+
+
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("SelectedCourses", selectedCourses);
         bundle.putString("userId", user);
 
+        CoursesFragment courseFrag =  new CoursesFragment();
+        courseFrag.setArguments(bundle);
+
         UniversityFragment unifragment = new UniversityFragment();
         unifragment.setArguments(bundle);
-
-
-
-
-
 
 
         tab = findViewById(R.id.tabLayout);
@@ -78,8 +121,10 @@ public class LandingPage extends AppCompatActivity {
 
 
 
-
-
-
     }
+
+
+
+
+
 }
