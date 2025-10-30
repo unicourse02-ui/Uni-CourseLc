@@ -114,7 +114,6 @@
         android:id="@+id/viewPager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,7 +151,7 @@
             android:layout_marginHorizontal="45dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/voter"
-            android:id="@+id/homeIcon"
+            android:id="@+id/compareIcon"
             android:backgroundTint="@color/black"
 
             />
@@ -162,8 +161,9 @@
             android:layout_marginHorizontal="45dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/user"
-            android:id="@+id/user"
+            android:id="@+id/ProfileIcon"
             android:backgroundTint="@color/black"
+
 
             />
     </LinearLayout>

@@ -25,7 +25,7 @@ public class User_Data {
         data.child(userName).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String userNames = snapshot.child("name").getValue(String.class).toUpperCase();
+                 String userNames = snapshot.child("name").getValue(String.class).toUpperCase();
 
                 datausers.onSuccess(userNames);
 

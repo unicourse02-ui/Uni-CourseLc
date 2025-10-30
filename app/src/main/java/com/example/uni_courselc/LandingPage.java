@@ -1,8 +1,10 @@
 package com.example.uni_courselc;
 
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,7 +29,7 @@ public class LandingPage extends AppCompatActivity {
     ViewPager2 viewPager2;
     TextView usr_Name, greet;
 
-    ImageView homexml;
+    ImageView homexml , userProfile;
 
 
 
@@ -43,12 +45,10 @@ public class LandingPage extends AppCompatActivity {
             return insets;
         });
 
+        userProfile = findViewById(R.id.ProfileIcon);
 
         ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
         String user = getIntent().getStringExtra("userId");
-
-
-
 
         User_Data userDAta = new User_Data();
 
@@ -118,6 +118,19 @@ public class LandingPage extends AppCompatActivity {
                 }
             }
         });
+
+
+        userProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LandingPage.this, Profile_Page.class);
+                startActivity(intent);
+
+
+            }
+        });
+
+
 
 
 
