@@ -29,7 +29,7 @@ public class LandingPage extends AppCompatActivity {
     ViewPager2 viewPager2;
     TextView usr_Name, greet;
 
-    ImageView homexml , userProfile;
+    ImageView homexml , userProfile , compareIcon;
 
 
 
@@ -45,6 +45,7 @@ public class LandingPage extends AppCompatActivity {
             return insets;
         });
 
+        compareIcon = findViewById(R.id.compareIcon);
         userProfile = findViewById(R.id.ProfileIcon);
 
         ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
@@ -127,6 +128,14 @@ public class LandingPage extends AppCompatActivity {
                 startActivity(intent);
 
 
+            }
+        });
+
+        compareIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LandingPage.this,ComparisonPage.class);
+                startActivity(intent);
             }
         });
 

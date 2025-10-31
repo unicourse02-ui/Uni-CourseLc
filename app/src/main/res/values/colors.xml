@@ -6,6 +6,8 @@
     <color name="deep_blue">#2E3AA1</color>
     <color name = "SearchBAr">#f0ebee</color>
     <color name = "yellw">#FFD700</color>
+    <color name = "gray">#F4F4EF</color>
+
 
 
 </resources>
