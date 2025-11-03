@@ -13,11 +13,12 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center_vertical"
+        android:id="@+id/linearBackButton"
+        android:clickable="true"
         >
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -40,15 +41,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="50dp"
-        android:layout_height="300dp"
-        android:background="@color/white"
+        android:layout_height="250dp"
+        android:background="@color/black"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:orientation="horizontal"
         android:id="@+id/compareLayout"
         android:gravity="center"
-        android:layout_marginHorizontal="20dp"
 
 
         >
@@ -68,9 +68,10 @@
                 app:shapeAppearance="@style/RoundedImage"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@drawable/tup"
                 android:background="@color/white"
                 app:strokeColor="@color/MainColor"
+
                 app:strokeWidth="1dp"
                 />
 
@@ -85,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="University of santo tomas"
-                android:textColor="@color/MainColor"
+                android:textColor="@color/white"
                 android:fontFamily="@font/adamina"/>
 
 
@@ -108,7 +109,7 @@
                 app:shapeAppearance="@style/RoundedImage"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@drawable/tup"
                 android:background="@color/white"
                 app:strokeColor="@color/MainColor"
                 app:strokeWidth="1dp"
@@ -126,7 +127,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="University of santo tomas"
-                android:textColor="@color/MainColor"
+                android:textColor="@color/white"
                 android:fontFamily="@font/adamina"/>
 
 
@@ -142,7 +143,7 @@
         android:translationY="-4dp"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:cornerRadius="7dp"
+        app:cornerRadius="0dp"
         app:layout_constraintTop_toBottomOf="@+id/compareLayout"
         android:text="Compare Universities"
         android:textStyle="bold"
@@ -151,7 +152,6 @@
         android:backgroundTint="@color/MainColor"
         app:strokeWidth="1dp"
         app:strokeColor="@color/black"
-        android:layout_marginHorizontal="20dp"
 
         />
 

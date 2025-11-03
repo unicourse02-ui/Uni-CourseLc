@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,8 +18,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.uni_courselc.fragment.CoursesFragment;
 import com.example.uni_courselc.fragment.UniversityFragment;
 import com.google.android.material.tabs.TabLayout;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -134,7 +131,7 @@ public class LandingPage extends AppCompatActivity {
         compareIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LandingPage.this,ComparisonPage.class);
+                Intent intent = new Intent(LandingPage.this, ComparisonPage.class);
                 startActivity(intent);
             }
         });

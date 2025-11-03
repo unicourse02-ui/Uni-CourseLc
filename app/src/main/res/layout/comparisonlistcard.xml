@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="10dp"
+    app:cardCornerRadius="8dp"
     >
 
     <LinearLayout
@@ -28,7 +29,7 @@
                 android:layout_height="80dp"
                 android:background="@color/white"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@drawable/tup"
                 />
 
             <TextView
@@ -38,7 +39,8 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/adamina"
                 android:text="University of santo tomas"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+ />
 
 
         </LinearLayout>
@@ -59,7 +61,7 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@drawable/tup"
                 android:background="@color/white"
                 />
 
@@ -81,6 +83,6 @@
 
 
 
-</LinearLayout>
+</androidx.cardview.widget.CardView>
 
 

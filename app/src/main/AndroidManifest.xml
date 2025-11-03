@@ -16,6 +16,8 @@
         <activity
             android:name=".ComparisonPage"
             android:exported="false" />
+        <activity android:name=".comparisonResult"
+            android:exported="false"/>
         <activity
             android:name=".Profile_Page"
             android:exported="false" />

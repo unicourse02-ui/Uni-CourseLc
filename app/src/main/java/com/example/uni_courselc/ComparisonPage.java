@@ -1,6 +1,10 @@
 package com.example.uni_courselc;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,12 +14,17 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ComparisonPage extends AppCompatActivity {
     comparisonListAdapter compareAdapter;
+    LinearLayout Backlinearbutton;
     RecyclerView reycle;
+
+    MaterialButton compareButton;
 
 
     @Override
@@ -30,12 +39,10 @@ public class ComparisonPage extends AppCompatActivity {
         });
 
         List<compareData> compareList = new ArrayList<>();
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
-        compareList.add(new compareData("Mark Justine Tibor","Justine Mark Tibor"));
+        compareList.add(new compareData("JU YURI","LEE JE EUN"));
+        compareList.add(new compareData("JU YURI","LEE JE EUN"));
+        compareList.add(new compareData("JU YURI","LEE JE EUN"));
+        compareList.add(new compareData("JU YURI","LEE JE EUN"));
 
 
 
@@ -46,7 +53,27 @@ public class ComparisonPage extends AppCompatActivity {
 
 
 
+        Backlinearbutton = findViewById(R.id.linearBackButton);
 
+        Backlinearbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(),"working",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ComparisonPage.this, LandingPage.class);
+                finish();
+
+            }
+        });
+
+        compareButton = findViewById(R.id.compareButton);
+        compareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ComparisonPage.this, comparisonResult.class);
+                startActivity(intent);
+
+            }
+        });
 
 
 
@@ -56,4 +83,11 @@ public class ComparisonPage extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
+
 }
