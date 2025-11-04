@@ -90,34 +90,44 @@ public class MainActivity extends AppCompatActivity {
         checkUserDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                System.out.println("DEBUG: Snapshot exists: " + snapshot.exists());
+                System.out.println("DEBUG: Snapshot children count: " + snapshot.getChildrenCount());
+
                 if (snapshot.exists()) {
                     UserName.setError(null);
 
-                    // Get password from database
-                    String passwordFromDB = snapshot.child(Username).child("password").getValue(String.class);
+                    for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+                        System.out.println("DEBUG: User key: " + userSnapshot.getKey());
 
-                    if (passwordFromDB.equals(Password)) {
-                        UserName.setError(null);
+                        String passwordFromDB = userSnapshot.child("password").getValue(String.class);
+                        String nameFromDB = userSnapshot.child("name").getValue(String.class);
+                        String emailFromDB = userSnapshot.child("email").getValue(String.class);
+                        String usernameFromDB = userSnapshot.child("username").getValue(String.class);
 
-                        // Get user data
-                        String nameFromDB = snapshot.child(Username).child("name").getValue(String.class);
-                        String emailFromDB = snapshot.child(Username).child("email").getValue(String.class);
-                        String usernameFromDB = snapshot.child(Username).child("username").getValue(String.class);
+                        System.out.println("DEBUG: Password from DB: " + passwordFromDB);
+                        System.out.println("DEBUG: Name from DB: " + nameFromDB);
+                        System.out.println("DEBUG: Email from DB: " + emailFromDB);
+                        System.out.println("DEBUG: Username from DB: " + usernameFromDB);
 
-                        Toast.makeText(MainActivity.this, "LoginSuccess", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, Filter_Page.class);
+                        if (passwordFromDB != null && passwordFromDB.equals(Password)) {
+                            // Login successful
+                            Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(MainActivity.this, Filter_Page.class);
 
-                        // Pass user data to next activity
-                        intent.putExtra("name", nameFromDB);
-                        intent.putExtra("email", emailFromDB);
-                        intent.putExtra("username", usernameFromDB);
-                        intent.putExtra("password", passwordFromDB);
+                            intent.putExtra("name", nameFromDB);
+                            intent.putExtra("email", emailFromDB);
+                            intent.putExtra("username", usernameFromDB);
+                            intent.putExtra("password", passwordFromDB);
 
-                        startActivity(intent);
-                    } else {
-                        PassWord.setError("Invalid Credentials");
-                        PassWord.requestFocus();
+                            startActivity(intent);
+                            return;
+                        }
                     }
+
+                    // If we get here, password didn't match
+                    PassWord.setError("Invalid Credentials");
+                    PassWord.requestFocus();
+
                 } else {
                     UserName.setError("User does not exist");
                     UserName.requestFocus();
@@ -126,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                System.out.println("DEBUG: Database error: " + error.getMessage());
+                Toast.makeText(MainActivity.this, "Database error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

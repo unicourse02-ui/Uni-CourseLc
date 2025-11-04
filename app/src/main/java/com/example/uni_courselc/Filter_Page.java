@@ -128,6 +128,7 @@ public class Filter_Page extends AppCompatActivity {
                 }
 
             }
+
             Intent intent2 = getIntent();
             String user = intent2.getStringExtra("username");
             btn.setOnClickListener(v -> {
@@ -139,8 +140,14 @@ public class Filter_Page extends AppCompatActivity {
                 Intent intent = new Intent(Filter_Page.this, LandingPage.class);
                 intent.putStringArrayListExtra("SelectedCourses", new ArrayList<>(Selected_Course));
                 intent.putExtra("userId", user);
-                startActivity(intent);
 
+                // ADD THESE LINES - Pass user data from Filter_Page to LandingPage
+                intent.putExtra("name", getIntent().getStringExtra("name"));
+                intent.putExtra("email", getIntent().getStringExtra("email"));
+                intent.putExtra("username", getIntent().getStringExtra("username"));
+                intent.putExtra("password", getIntent().getStringExtra("password"));
+
+                startActivity(intent);
             });
 
 

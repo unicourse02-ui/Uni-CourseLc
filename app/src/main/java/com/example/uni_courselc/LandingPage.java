@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +29,9 @@ public class LandingPage extends AppCompatActivity {
 
     ImageView homexml , userProfile , compareIcon;
 
-
-
+    // Add these to store user data
+    private String currentUserName, currentUserEmail, currentUserUsername, currentUserPassword;
+    private User_Data userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,34 +50,24 @@ public class LandingPage extends AppCompatActivity {
         ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
         String user = getIntent().getStringExtra("userId");
 
-        User_Data userDAta = new User_Data();
+        // Initialize User_Data
+        userData = new User_Data();
 
-        userDAta.getData(user, new User_Data.getDatauser() {
-            @Override
-            public void onSuccess(String Data) {
-                usr_Name = findViewById(R.id.name);
+        // Get user data from intent first (if available)
+        currentUserName = getIntent().getStringExtra("name");
+        currentUserEmail = getIntent().getStringExtra("email");
+        currentUserUsername = getIntent().getStringExtra("username");
+        currentUserPassword = getIntent().getStringExtra("password");
 
-                usr_Name.setText(Data);
-                usr_Name.setTextSize(20);
-                usr_Name.setTypeface(null, Typeface.BOLD);
-
-            }
-
-            @Override
-            public void failed(String Data) {
-                Log.d("nope","nope");
-
-            }
-        });
+        // Fetch user data from database (this ensures we have the latest data)
+        if (user != null) {
+            fetchUserDataFromDatabase(user);
+        }
 
         Clock clock = new Clock();
-
         greet = findViewById(R.id.greeter);
-
         greet.setText(clock.setGreet());
         clock.testing();
-
-
 
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("SelectedCourses", selectedCourses);
@@ -86,7 +78,6 @@ public class LandingPage extends AppCompatActivity {
 
         UniversityFragment unifragment = new UniversityFragment();
         unifragment.setArguments(bundle);
-
 
         tab = findViewById(R.id.tabLayout);
         viewPager2 = findViewById(R.id.viewPager);
@@ -117,14 +108,10 @@ public class LandingPage extends AppCompatActivity {
             }
         });
 
-
         userProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LandingPage.this, Profile_Page.class);
-                startActivity(intent);
-
-
+                navigateToProfile();
             }
         });
 
@@ -135,15 +122,70 @@ public class LandingPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
     }
 
+    private void fetchUserDataFromDatabase(String username) {
+        userData.getAllUserData(username, new User_Data.GetAllDataCallback() {
+            @Override
+            public void onSuccess(String name, String email, String username, String password) {
+                // Store the user data
+                currentUserName = name;
+                currentUserEmail = email;
+                currentUserUsername = username;
+                currentUserPassword = password;
 
+                // Update the UI with the user's name
+                runOnUiThread(() -> {
+                    usr_Name = findViewById(R.id.name);
+                    usr_Name.setText(name != null ? name.toUpperCase() : "User");
+                    usr_Name.setTextSize(20);
+                    usr_Name.setTypeface(null, Typeface.BOLD);
+                });
+            }
 
+            @Override
+            public void onFailed(String error) {
+                // If database fetch fails, use the data from intent (if available)
+                if (currentUserName == null) {
+                    // Fallback: try to get just the name using your existing method
+                    userData.getData(username, new User_Data.getDatauser() {
+                        @Override
+                        public void onSuccess(String Data) {
+                            runOnUiThread(() -> {
+                                usr_Name = findViewById(R.id.name);
+                                usr_Name.setText(Data);
+                                usr_Name.setTextSize(20);
+                                usr_Name.setTypeface(null, Typeface.BOLD);
+                            });
+                        }
 
+                        @Override
+                        public void failed(String Data) {
+                            Log.d("nope","nope");
+                        }
+                    });
+                }
+            }
+        });
+    }
 
+    private void navigateToProfile() {
+        Intent intent = new Intent(LandingPage.this, Profile_Page.class);
+
+        // Pass the user data we have
+        if (currentUserName != null && currentUserEmail != null && currentUserUsername != null) {
+            intent.putExtra("name", currentUserName);
+            intent.putExtra("email", currentUserEmail);
+            intent.putExtra("username", currentUserUsername);
+            intent.putExtra("password", currentUserPassword);
+        } else {
+            // Fallback: use data from intent if we don't have the fetched data
+            intent.putExtra("name", getIntent().getStringExtra("name"));
+            intent.putExtra("email", getIntent().getStringExtra("email"));
+            intent.putExtra("username", getIntent().getStringExtra("username"));
+            intent.putExtra("password", getIntent().getStringExtra("password"));
+        }
+
+        startActivity(intent);
+    }
 }

@@ -18,35 +18,38 @@
         app:shapeAppearance="@style/cardBottom"
         >
 
-
         <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="50dp"
+            >
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/user"/>
+            <!-- ADD ID for full name -->
+            <TextView
+                android:id="@+id/textViewFullName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginTop="70dp"
-                android:layout_marginBottom="50dp"
-                >
+                android:textColor="@color/white"
+                android:text="Name"
+                android:textSize="20sp"
+                />
 
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/user"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="Mark Justine Tibor"
-                    android:textSize="20sp"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:text="galaxydragon"
-                    android:textSize="15sp"/>
-            </LinearLayout>
+            <!-- ADD ID for username -->
+            <TextView
+                android:id="@+id/textViewUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Username"
+                android:textSize="15sp"/>
+        </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -63,7 +66,7 @@
         android:translationY="-25dp"
         app:strokeWidth="1.2dp"
         android:id="@+id/backButton"
-         />
+        />
 
     <LinearLayout
         android:id="@+id/informationSec"
@@ -97,6 +100,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
+                <!-- First Row - Name -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -114,7 +118,6 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginLeft="15dp"
-
                         >
                         <TextView
                             android:layout_width="wrap_content"
@@ -124,20 +127,21 @@
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
+                        <!-- ADD ID for name value -->
                         <TextView
+                            android:id="@+id/textViewNameValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Name"
                             android:textSize="12sp"/>
-
-
                     </LinearLayout>
-
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#CCCCCC"/>
+
+                <!-- Second Row - Email -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -155,30 +159,30 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginLeft="15dp"
-
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Email"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
+                        <!-- ADD ID for email value -->
                         <TextView
+                            android:id="@+id/textViewEmailValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Email"
                             android:textSize="12sp"/>
-
-
                     </LinearLayout>
-
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#CCCCCC"/>
+
+                <!-- Third Row - Username -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -196,30 +200,30 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginLeft="15dp"
-
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Username"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
+                        <!-- ADD ID for username value -->
                         <TextView
+                            android:id="@+id/textViewUsernameValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Username"
                             android:textSize="12sp"/>
-
-
                     </LinearLayout>
-
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#CCCCCC"/>
+
+                <!-- Fourth Row - Password -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -237,45 +241,37 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginLeft="15dp"
-
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Password"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:textColor="@color/black"
                             />
+                        <!-- ADD ID for password value -->
                         <TextView
+                            android:id="@+id/textViewPasswordValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="Password"
                             android:textSize="12sp"/>
-
-
                     </LinearLayout>
-
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
                     android:background="#CCCCCC"/>
-
-
-
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- ADD ID for Edit Profile button -->
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/editProfileButton"
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Edit Profile"/>
-
-
-
     </LinearLayout>
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
