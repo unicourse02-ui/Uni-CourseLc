@@ -15,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 
+import java.util.regex.Pattern;
+
 public class SignUp extends AppCompatActivity {
     DatabaseReference databaseRef;
     Button Signup;
@@ -22,6 +24,9 @@ public class SignUp extends AppCompatActivity {
     TextView RegisterPass;
     TextView RegisterName;
     TextView RegisterEmail;
+
+    // Password pattern: at least 12 characters, at least one number, and at least one special character
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+$).{12,}$");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +42,6 @@ public class SignUp extends AppCompatActivity {
 
         // Change to "users" database reference
         databaseRef = FirebaseDatabase.getInstance().getReference("users");
-
 
         Signup = findViewById(R.id.btnSignUp);
         RegisterUser = findViewById(R.id.registerUserName);
@@ -78,6 +82,9 @@ public class SignUp extends AppCompatActivity {
         if (val.isEmpty()) {
             RegisterEmail.setError("Email cannot be empty");
             return false;
+        } else if (!val.endsWith("@email.com")) {
+            RegisterEmail.setError("Email must end with @email.com");
+            return false;
         } else {
             RegisterEmail.setError(null);
             return true;
@@ -99,6 +106,12 @@ public class SignUp extends AppCompatActivity {
         String val = RegisterPass.getText().toString();
         if (val.isEmpty()) {
             RegisterPass.setError("Password cannot be empty");
+            return false;
+        } else if (val.length() < 12) {
+            RegisterPass.setError("Password must be at least 12 characters long");
+            return false;
+        } else if (!PASSWORD_PATTERN.matcher(val).matches()) {
+            RegisterPass.setError("Password must contain at least one number and one special character");
             return false;
         } else {
             RegisterPass.setError(null);
