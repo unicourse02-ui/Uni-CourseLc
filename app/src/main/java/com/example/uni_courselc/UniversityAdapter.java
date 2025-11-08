@@ -49,7 +49,6 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
 
 
 
-
     }
 
     @Override
