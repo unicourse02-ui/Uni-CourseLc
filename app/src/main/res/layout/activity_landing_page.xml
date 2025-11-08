@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LandingPage"
-    android:background="@color/white"
+    android:background="@color/white" android:layout_below=""
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
