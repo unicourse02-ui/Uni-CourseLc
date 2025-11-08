@@ -150,8 +150,8 @@
             android:layout_height="35dp"
             android:layout_marginHorizontal="45dp"
             android:layout_marginTop="10dp"
-            android:src="@drawable/voter"
-            android:id="@+id/compareIcon"
+            android:src="@drawable/save"
+            android:id="@+id/saveIcon"
             android:backgroundTint="@color/black"
 
             />
