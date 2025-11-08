@@ -32,7 +32,7 @@ public class UniversityFragment extends Fragment {
     FirebaseFirestore data;
     List<Universities> uniersitieList = new ArrayList<>();
 
-    FirebaseFirestore firestore;
+    FirebaseFirestore firestore,firestore2;
     DatabaseReference realtimeRef;
 
     private List<String>  selectedCourses = new ArrayList<>();
@@ -46,6 +46,7 @@ public class UniversityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_university, container, false);
 
         firestore = FirebaseFirestore.getInstance();
+        firestore2 = FirebaseFirestore.getInstance();
         realtimeRef = FirebaseDatabase.getInstance().getReference("users");
 
         recyle = view.findViewById(R.id.recycleUniversty);
@@ -71,43 +72,71 @@ public class UniversityFragment extends Fragment {
     public void filter() {
         uniersitieList.clear();
 
-        firestore.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (QueryDocumentSnapshot data : queryDocumentSnapshots) {
-                String name = data.getString("Name");
-                String image = data.getString("ImgUrl");
-
-                Double ratedouble = data.getDouble("rating");
-                Double stardouble = data.getDouble("star");
-
-                int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
-                int star = (stardouble != null) ? stardouble.intValue() : 0;
-
-                Object coursesObj = data.get("Course");
-                List<String> courses_offered = new ArrayList<>();
-                if (coursesObj instanceof List<?>) {
-                    for (Object o : (List<?>) coursesObj) {
-                        courses_offered.add(String.valueOf(o));
-                    }
+        firestore.collection("Filter").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<String> PopularUnin = new ArrayList<>();
+            for(QueryDocumentSnapshot unifilter : queryDocumentSnapshots){
+                List<String> popPularList = (List<String>)  unifilter.get("Recommended");
+                if(popPularList != null ){
+                    PopularUnin.addAll(popPularList);
                 }
 
-                boolean hasCourse = false;
-                if (selectedCourses != null && !selectedCourses.isEmpty()) {
-                    for (String selected : selectedCourses) {
-                        if (courses_offered.contains(selected)) {
-                            hasCourse = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (hasCourse) {
-                    uniersitieList.add(new Universities(name, image, star, rating));
-                }
             }
 
-            adapter.notifyDataSetChanged();
+            firestore2.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                for(QueryDocumentSnapshot data : queryDocumentSnapshots1){
+                    String name = data.getString("Name");
+                    String image = data.getString("ImgUrl");
+                    Double ratedouble = data.getDouble("rating");
+                    Double stardouble = data.getDouble("star");
+                    int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
+                    int star = (stardouble != null) ? stardouble.intValue() : 0;
+
+                    Object coursesObj = data.get("Course");
+                    List<String> courses_offered = new ArrayList<>();
+                    if (coursesObj instanceof List<?>) {
+                        for (Object o : (List<?>) coursesObj) {
+                            courses_offered.add(String.valueOf(o));
+                        }
+                    }
+
+
+                    boolean courseMatch = false;
+                    if( selectedCourses != null && !selectedCourses.isEmpty()&& !courses_offered.isEmpty()
+                    ){
+                        for(String courses: selectedCourses){
+                            if(courses_offered.contains(courses)){
+                                courseMatch =true;
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                    if(courseMatch && PopularUnin.contains(name)){
+                        uniersitieList.add(new Universities(name, image, star, rating));
+
+                    }
+
+
+                }
+                adapter.notifyDataSetChanged();
+
+
+
+
+            });
+
+
+
+
+
+
         });
-    }
+
+
+        }
 
 
 

@@ -18,6 +18,8 @@
     import java.util.ArrayList;
     import java.util.List;
     import java.util.zip.Inflater;
+
+    import com.example.uni_courselc.Universities;
     import com.google.firebase.firestore.FirebaseFirestore;
     import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -26,7 +28,7 @@
         FirebaseFirestore schoolsdata;
         List<String> selected_course = new ArrayList<>();
 
-        List<CourseData> recycleDataCourse = new ArrayList<>();
+        List<Universities> recycleDataCourse = new ArrayList<>();
 
         CourseAdapter courseadapt;
 
@@ -44,7 +46,7 @@
             reycles = ui.findViewById(R.id.Recycle_Courses);
             reycles.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
 
-            courseadapt = new CourseAdapter(getContext(),recycleDataCourse);
+            courseadapt = new CourseAdapter(recycleDataCourse,getContext());
             reycles.setAdapter(courseadapt);
 
             schoolsdata  =FirebaseFirestore.getInstance();
@@ -65,38 +67,6 @@
         public void  getData(){
             recycleDataCourse.clear();
             schoolsdata.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
-
-                for(QueryDocumentSnapshot datas: queryDocumentSnapshots){
-                    List<String> courses = (List<String>) datas.get("Course");
-
-                    Log.d("Testing","Testing"+ courses);
-                    List<String> matched = new ArrayList<>();
-                    if (courses == null) continue;
-
-
-
-                    for(String selected : selected_course){
-                        if(courses.contains(selected)){
-                            matched.add(selected);
-
-                        }
-                    }
-
-                    if(!matched.isEmpty()){
-                        String  universityName  = datas.getString("Name");
-                        for(String courseNames: matched){
-
-                                recycleDataCourse.add(new CourseData(universityName,courseNames));
-
-
-                        }
-
-                    }
-
-
-                }
-                courseadapt.notifyDataSetChanged();
-
 
             });
 
