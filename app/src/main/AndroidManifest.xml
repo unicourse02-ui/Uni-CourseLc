@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UniCourseLC">
         <activity
-            android:name=".uniDetail"
+            android:name=".tupDetail"
             android:exported="false" />
         <activity
             android:name=".ComparisonPage"

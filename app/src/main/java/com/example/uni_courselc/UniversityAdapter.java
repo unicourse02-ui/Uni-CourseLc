@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +42,7 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
         Glide.with(context).load(universities.getImg()).into(holder.img);
 
         holder.itemView.setOnClickListener(v ->{
-            Intent intent = new Intent(context, uniDetail.class);
+            Intent intent = new Intent(context, tupDetail.class);
             context.startActivity(intent);
 
         });

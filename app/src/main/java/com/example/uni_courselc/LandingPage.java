@@ -44,7 +44,7 @@ public class LandingPage extends AppCompatActivity {
             return insets;
         });
 
-        compareIcon = findViewById(R.id.compareIcon);
+        compareIcon = findViewById(R.id.saveIcon);
         userProfile = findViewById(R.id.ProfileIcon);
 
         ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
