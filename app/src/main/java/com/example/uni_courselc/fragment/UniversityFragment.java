@@ -88,6 +88,10 @@ public class UniversityFragment extends Fragment {
                     String image = data.getString("ImgUrl");
                     Double ratedouble = data.getDouble("rating");
                     Double stardouble = data.getDouble("star");
+                    String about = data.getString("About");
+                    String application = data.getString("ApplicationLink");
+                    String contact =  data.getString("Contact");
+                    String location = data.getString("Location");
                     int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
                     int star = (stardouble != null) ? stardouble.intValue() : 0;
 
@@ -114,8 +118,12 @@ public class UniversityFragment extends Fragment {
 
                     }
 
+                    Log.d("RATINS","RATINGS" + rating);
+                    Log.d("STAR","STAR" + star);
+
+
                     if(courseMatch && PopularUnin.contains(name)){
-                        uniersitieList.add(new Universities(name, image, star, rating));
+                        uniersitieList.add(new Universities(name, image, star, rating,about,application,contact,location));
                         Log.d("HELLO","HELLO" + PopularUnin);
 
                     }

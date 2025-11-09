@@ -41,6 +41,12 @@ public class Filter_Page extends AppCompatActivity {
     DatabaseReference dataref;
     List<String> Raw_Courses = new ArrayList<>();
     List<String> Raw_Courses2 = new ArrayList<>();
+    List<String> Raw_Courses3 = new ArrayList<>();
+    List<String> Raw_Courses4 = new ArrayList<>();
+    List<String> Raw_Courses5 = new ArrayList<>();
+    List<String> Raw_Courses6 = new ArrayList<>();
+    List<String> Raw_Courses7 = new ArrayList<>();
+
     List<String> Selected_Course = new ArrayList<>();
 
     Chip c ;
@@ -65,21 +71,37 @@ public class Filter_Page extends AppCompatActivity {
         data.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
 
             for(QueryDocumentSnapshot datas: queryDocumentSnapshots){
-                List<String> fetched_data = (List<String>) datas.get("Popular");
-                List<String> fetched_data2 = (List<String>) datas.get("Recomended");
-                if(fetched_data !=null && fetched_data2 != null){
+                List<String> fetched_data = (List<String>) datas.get("Business");
+                List<String> fetched_data4 = (List<String>) datas.get("Engineering");
+                List<String> fetched_data5 = (List<String>) datas.get("Management");
+                List<String> fetched_data6 = (List<String>) datas.get("Social Science");
+                List<String> fetched_data7 = (List<String>) datas.get("Technology");
+
+
+
+
+                if(fetched_data !=null &&  fetched_data4 != null && fetched_data5 !=null && fetched_data6 != null &&  fetched_data7 != null)
+                {
                     Raw_Courses.addAll(fetched_data);
-                    Raw_Courses2.addAll(fetched_data2);
+                    Raw_Courses4.addAll(fetched_data4);
+                    Raw_Courses5.addAll(fetched_data5);
+                    Raw_Courses6.addAll(fetched_data6);
+                    Raw_Courses7.addAll(fetched_data7);
+
 
                 }
 
             }
 
             String [] courseTemp = Raw_Courses.toArray(new String[0]);
-            String [] courseTemp2 = Raw_Courses2.toArray(new String[0]);
+            String [] courseTemp4 = Raw_Courses4.toArray(new String[0]);
+            String [] courseTemp5 = Raw_Courses5.toArray(new String[0]);
+            String [] courseTemp6 = Raw_Courses6.toArray(new String[0]);
+            String [] courseTemp7 = Raw_Courses7.toArray(new String[0]);
 
-            String[] Title = {"Popular","Recommended"};
-            String[][] choices = {courseTemp,courseTemp2 };
+
+            String[] Title = {"Business","Engineering","Management","Social Science","Technology"};
+            String[][] choices = {courseTemp,courseTemp4 ,courseTemp5,courseTemp6,courseTemp7 };
 
             for(int i = 0; i<Title.length;i++){
                 TextView title = new TextView(this);

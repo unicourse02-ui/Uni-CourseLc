@@ -36,7 +36,6 @@ public class tupDetail extends AppCompatActivity {
 
         info();
         courseClick();
-        setupApplyButton();
     }
 
 
@@ -46,7 +45,7 @@ public class tupDetail extends AppCompatActivity {
         ImageButton back;
 
         ImageView image;
-        TextView uni,ratig;
+        TextView uni,ratig,About,Contacts,Addresss,Application;
         RatingBar ratings;
 
         String Name = intent.getStringExtra("Name");
@@ -54,16 +53,30 @@ public class tupDetail extends AppCompatActivity {
         String Rating = intent.getStringExtra("Rating");
         int Star = intent.getIntExtra("Star",0);
 
+        String about = intent.getStringExtra("about");
+        String ApplicationLink = intent.getStringExtra("ApplicationLink");
+        String Contact = intent.getStringExtra("Contact");
+        String addresss = intent.getStringExtra("Address");
+
 
         image = findViewById(R.id.image);
         uni  = findViewById(R.id.uniName);
         ratings = findViewById(R.id.ratingBar);
         back = findViewById(R.id.back);
+        About = findViewById(R.id.aboutText);
+        Contacts = findViewById(R.id.contactText);
+        Addresss =findViewById(R.id.addressText);
+
+
+
 
 
         uni.setText(Name);
         Glide.with(this).load(Image).into(image);
         ratings.setRating(Star);
+        About.setText(about);
+        Contacts.setText(Contact);
+        Addresss.setText(addresss);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,6 +85,8 @@ public class tupDetail extends AppCompatActivity {
 
             }
         });
+        setupApplyButton(ApplicationLink);
+
 
 
 
@@ -104,16 +119,15 @@ public class tupDetail extends AppCompatActivity {
         });
     }
 
-    private void setupApplyButton() {
+    private void setupApplyButton(String url) {
         MaterialButton applyButton = findViewById(R.id.applyButton);
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String applicationUrl = "https://tup.edu.ph/pages/admission/application-for-admission-2025-2026";
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(applicationUrl));
+                intent.setData(Uri.parse(url));
                 startActivity(intent);
             }
         });

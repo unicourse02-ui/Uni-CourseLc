@@ -47,6 +47,11 @@ public class CourseAdapter extends  RecyclerView.Adapter<CourseAdapter.ViewHolde
                 intent.putExtra("Img", universities.getImg());
                 intent.putExtra("Rating", universities.getRatings());
                 intent.putExtra("Star", universities.getStars());
+                intent.putExtra("about", universities.getAbout());
+                intent.putExtra("ApplicationLink", universities.getApplicationLink());
+                intent.putExtra("Contact", universities.getContact());
+                intent.putExtra("Address", universities.getAddress());
+
 
                 context.startActivity(intent);
 

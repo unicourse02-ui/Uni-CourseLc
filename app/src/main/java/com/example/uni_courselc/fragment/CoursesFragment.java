@@ -91,6 +91,10 @@
                         String image = Universities.getString("ImgUrl");
                         Double ratedouble = Universities.getDouble("rating");
                         Double stardouble = Universities.getDouble("star");
+                        String about = Universities.getString("About");
+                        String application = Universities.getString("ApplicationLink");
+                        String contact =  Universities.getString("Contact");
+                        String location = Universities.getString("Location");
                         int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
                         int star = (stardouble != null) ? stardouble.intValue() : 0;
 
@@ -115,7 +119,7 @@
                         }
 
                         if(matched && RecommendedUni.contains(name)){
-                            recycleDataCourse.add(new Universities(name, image, star, rating));
+                            recycleDataCourse.add(new Universities(name, image, star, rating,about,application,contact,location));
                             Log.d("COURSETEST","COURSETEST" +RecommendedUni +""+ name );
                             Log.d("MactheduNI","MactheduNI"  +""+ matchUniversities );
 

@@ -2,6 +2,8 @@ package com.example.uni_courselc;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +50,11 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
                 intent.putExtra("Img", universities.getImg());
                 intent.putExtra("Rating", universities.getRatings());
                 intent.putExtra("Star", universities.getStars());
+                intent.putExtra("about", universities.getAbout());
+                intent.putExtra("ApplicationLink", universities.getApplicationLink());
+                intent.putExtra("Contact", universities.getContact());
+                intent.putExtra("Address", universities.getAddress());
+
 
                 context.startActivity(intent);
 
