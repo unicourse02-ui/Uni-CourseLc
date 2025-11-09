@@ -75,7 +75,7 @@ public class UniversityFragment extends Fragment {
         firestore.collection("Filter").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> PopularUnin = new ArrayList<>();
             for(QueryDocumentSnapshot unifilter : queryDocumentSnapshots){
-                List<String> popPularList = (List<String>)  unifilter.get("Recommended");
+                List<String> popPularList = (List<String>)  unifilter.get("Popular");
                 if(popPularList != null ){
                     PopularUnin.addAll(popPularList);
                 }
