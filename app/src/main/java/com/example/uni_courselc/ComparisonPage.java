@@ -20,11 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ComparisonPage extends AppCompatActivity {
-    comparisonListAdapter compareAdapter;
-    LinearLayout Backlinearbutton;
-    RecyclerView reycle;
 
-    MaterialButton compareButton;
+    RecyclerView recyclerView;
+    List<University> savedList;
+    savedUni adapter;
 
 
     @Override
@@ -38,43 +37,19 @@ public class ComparisonPage extends AppCompatActivity {
             return insets;
         });
 
-        List<compareData> compareList = new ArrayList<>();
-        compareList.add(new compareData("JU YURI","LEE JE EUN"));
-        compareList.add(new compareData("JU YURI","LEE JE EUN"));
-        compareList.add(new compareData("JU YURI","LEE JE EUN"));
-        compareList.add(new compareData("JU YURI","LEE JE EUN"));
+        recyclerView = findViewById(R.id.savedUniRecyclerView);
+        savedList = new ArrayList<>();
 
+        savedList.add(new University("Technological University of the Philippines", "Taguig, Philippines", "Public", R.drawable.tup));
+        savedList.add(new University("University of the Philippines", "Taguig", "Public", R.drawable.tup));
 
-
-        compareAdapter = new comparisonListAdapter(this,compareList);
-        reycle = findViewById(R.id.comparisonRecycle);
-        reycle.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        reycle.setAdapter(compareAdapter);
-
-
-
-        Backlinearbutton = findViewById(R.id.linearBackButton);
-
-        Backlinearbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(v.getContext(),"working",Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(ComparisonPage.this, LandingPage.class);
-                finish();
-
-            }
+        adapter = new savedUni(this, savedList, position -> {
+            savedList.remove(position);
+            adapter.notifyItemRemoved(position);
         });
 
-        compareButton = findViewById(R.id.compareButton);
-        compareButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ComparisonPage.this, comparisonResult.class);
-                startActivity(intent);
-
-            }
-        });
-
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
 
 
@@ -83,9 +58,6 @@ public class ComparisonPage extends AppCompatActivity {
 
 
     }
-
-
-
 
 
 

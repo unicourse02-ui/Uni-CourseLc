@@ -94,7 +94,7 @@
                         int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
                         int star = (stardouble != null) ? stardouble.intValue() : 0;
 
-                        List<String> uniObject = (List<String>) Universities.get("Course");
+                        List<String> uniObject = (List<String>) Universities.get("CourseFilter");
                         List<String> matchUniversities = new ArrayList<>();
 
                         if(uniObject instanceof List<?>){

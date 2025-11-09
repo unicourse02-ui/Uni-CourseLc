@@ -91,7 +91,7 @@ public class UniversityFragment extends Fragment {
                     int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
                     int star = (stardouble != null) ? stardouble.intValue() : 0;
 
-                    Object coursesObj = data.get("Course");
+                    Object coursesObj = data.get("CourseFilter");
                     List<String> courses_offered = new ArrayList<>();
                     if (coursesObj instanceof List<?>) {
                         for (Object o : (List<?>) coursesObj) {
