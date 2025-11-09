@@ -85,6 +85,7 @@ public class tupDetail extends AppCompatActivity {
 
             }
         });
+
         setupApplyButton(ApplicationLink);
 
 
