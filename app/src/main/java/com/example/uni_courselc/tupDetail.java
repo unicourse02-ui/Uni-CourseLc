@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.transition.TransitionManager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -15,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 
 public class tupDetail extends AppCompatActivity {
@@ -30,9 +34,50 @@ public class tupDetail extends AppCompatActivity {
             return insets;
         });
 
+        info();
         courseClick();
         setupApplyButton();
     }
+
+
+    public void info(){
+
+        Intent intent = getIntent();
+        ImageButton back;
+
+        ImageView image;
+        TextView uni,ratig;
+        RatingBar ratings;
+
+        String Name = intent.getStringExtra("Name");
+        String Image = intent.getStringExtra("Img");
+        String Rating = intent.getStringExtra("Rating");
+        int Star = intent.getIntExtra("Star",0);
+
+
+        image = findViewById(R.id.image);
+        uni  = findViewById(R.id.uniName);
+        ratings = findViewById(R.id.ratingBar);
+        back = findViewById(R.id.back);
+
+
+        uni.setText(Name);
+        Glide.with(this).load(Image).into(image);
+        ratings.setRating(Star);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+
+            }
+        });
+
+
+
+    }
+
+
 
     public void courseClick(){
         LinearLayout header, content;
@@ -64,7 +109,7 @@ public class tupDetail extends AppCompatActivity {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TUP application link from your document
+
                 String applicationUrl = "https://tup.edu.ph/pages/admission/application-for-admission-2025-2026";
 
                 Intent intent = new Intent(Intent.ACTION_VIEW);

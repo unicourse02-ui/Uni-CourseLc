@@ -2,28 +2,53 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".tupDetail"
-    android:id="@+id/main"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    tools:context=".tupDetail">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
-        tools:context=".tupDetail">
+        android:padding="16dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="0dp"
-            android:layout_height="255dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/tup"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imageCard"
+            android:layout_width="260dp"
+            android:layout_height="260dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/tup"/>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <ImageButton
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/back"
+            android:layout_marginStart="1dp"
+            app:layout_constraintEnd_toEndOf="@+id/imageCard"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/backarrow"
+            android:background="@color/white"
+            android:scaleType="centerCrop"
+            android:translationX="-10dp"/>
 
         <TextView
             android:id="@+id/uniName"
@@ -31,64 +56,77 @@
             android:layout_height="wrap_content"
             android:text="Technological University of the Philippines"
             android:textColor="@android:color/black"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/image"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@id/imageCard"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="-25dp"/>
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/ratings"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/image"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/uniName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="10dp">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <RatingBar
                 style="?android:attr/ratingBarStyleSmall"
+                android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:numStars="5"
                 android:stepSize="0.5"
                 android:rating="4"
                 android:progressTint="#FFD700"
-                android:secondaryProgressTint="#FFD700"/>
+                android:secondaryProgressTint="#FFD700" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Taguig • Philippines"
-                android:layout_marginStart="20dp"/>
+                android:textColor="#555"
+                android:textSize="14sp"
+                android:layout_marginStart="12dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Public"
-                android:layout_marginStart="100dp"/>
+                android:textColor="#555"
+                android:textSize="14sp"
+                android:layout_marginStart="12dp" />
         </LinearLayout>
+
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#CCCCCC"
-            android:layout_marginVertical="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:background="#E0E0E0"
+            android:layout_marginVertical="12dp"
             app:layout_constraintTop_toBottomOf="@id/ratings"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
         <LinearLayout
             android:id="@+id/content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@id/ratings"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp">
+            android:paddingTop="15dp"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -96,57 +134,64 @@
                 android:text="About"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                android:textSize="25sp"/>
+                android:textSize="22sp"
+                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:id="@+id/aboutText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Offers programs designed to equip students with the technical knowledge and skills needed to excel in their careers."
+                android:textColor="#444"
                 android:lineSpacingExtra="5dp"
-                android:layout_marginBottom="16dp"/>
+                android:textSize="15sp"
+                android:layout_marginBottom="16dp" />
 
-            <!-- Contact Information -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contact Information"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="18sp"
+                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:id="@+id/contactText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email: taguig@tup.edu.ph\nPhone: (+632) 8247-5250 to 54"
+                android:textColor="#444"
+                android:textSize="15sp"
                 android:lineSpacingExtra="5dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="16dp" />
 
-            <!-- Address -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Address"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
-                android:textSize="20sp"
-                android:layout_marginBottom="8dp"/>
+                android:textSize="18sp"
+                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:id="@+id/addressText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="KM14 East Service Road, Western Bicutan, Taguig City"
+                android:textColor="#444"
+                android:textSize="15sp"
                 android:lineSpacingExtra="5dp"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="20dp" />
 
             <LinearLayout
+                android:id="@+id/buttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:id="@+id/buttons">
+                android:gravity="center"
+                android:layout_marginBottom="20dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/applyButton"
@@ -154,45 +199,53 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Apply"
-                    android:padding="20dp"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
                     android:backgroundTint="@color/MainColor"
-                    app:cornerRadius="0dp"/>
+                    android:paddingVertical="14dp"
+                    app:cornerRadius="12dp"
+                    app:elevation="4dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/saveButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
+                    android:text="Save"
+                    android:textAllCaps="false"
+                    android:textSize="16sp"
+                    android:textColor="@color/MainColor"
+                    android:backgroundTint="@android:color/white"
                     app:strokeColor="@color/MainColor"
                     app:strokeWidth="2dp"
-                    android:padding="20dp"
-                    android:text="Save"
-                    android:backgroundTint="@android:color/white"
-                    android:textColor="@color/black"
-                    app:cornerRadius="0dp"/>
-
+                    app:cornerRadius="12dp"
+                    android:paddingVertical="14dp"
+                    app:elevation="2dp"
+                    android:layout_marginStart="10dp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/wrapper"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/header"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Courses"
-                        android:textSize="25dp"
-                        android:layout_weight="1"
+                        android:textSize="22sp"
                         android:textColor="@android:color/black"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:layout_weight="1"/>
 
                     <TextView
                         android:id="@+id/coursestoggle"
@@ -200,16 +253,16 @@
                         android:layout_height="wrap_content"
                         android:text="+"
                         android:textColor="@android:color/black"
-                        android:textSize="18sp"/>
-
+                        android:textSize="22sp" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/contents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:id="@+id/contents"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:paddingLeft="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -217,7 +270,7 @@
                         android:text="• BS Civil Engineering"
                         android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -225,7 +278,7 @@
                         android:text="• BS Electrical Engineering"
                         android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -233,7 +286,7 @@
                         android:text="• BS Electronics Engineering"
                         android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp"/>
+                        android:layout_marginBottom="6dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -241,14 +294,9 @@
                         android:text="• BS Mechanical Engineering"
                         android:textSize="16sp"
                         android:textColor="@color/black"
-                        android:layout_marginBottom="8dp"/>
-
+                        android:layout_marginBottom="6dp" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

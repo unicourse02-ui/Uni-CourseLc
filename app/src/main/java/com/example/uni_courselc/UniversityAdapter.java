@@ -41,11 +41,18 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
         holder.rate.setRating(universities.getStars());
         Glide.with(context).load(universities.getImg()).into(holder.img);
 
-        holder.itemView.setOnClickListener(v ->{
-            Intent intent = new Intent(context, tupDetail.class);
-            context.startActivity(intent);
 
-        });
+            holder.itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, tupDetail.class);
+                intent.putExtra("Name", universities.getName());
+                intent.putExtra("Img", universities.getImg());
+                intent.putExtra("Rating", universities.getRatings());
+                intent.putExtra("Star", universities.getStars());
+
+                context.startActivity(intent);
+
+            });
+
 
 
 

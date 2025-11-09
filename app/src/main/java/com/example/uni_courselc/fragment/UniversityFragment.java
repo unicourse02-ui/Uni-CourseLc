@@ -116,6 +116,7 @@ public class UniversityFragment extends Fragment {
 
                     if(courseMatch && PopularUnin.contains(name)){
                         uniersitieList.add(new Universities(name, image, star, rating));
+                        Log.d("HELLO","HELLO" + PopularUnin);
 
                     }
 
@@ -125,10 +126,7 @@ public class UniversityFragment extends Fragment {
 
 
 
-
             });
-
-
 
 
 
@@ -137,8 +135,6 @@ public class UniversityFragment extends Fragment {
 
 
         }
-
-
 
 
 
