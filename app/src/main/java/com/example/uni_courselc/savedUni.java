@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class savedUni  extends RecyclerView.Adapter<savedUni.ViewHolder>{
@@ -42,7 +44,15 @@ public class savedUni  extends RecyclerView.Adapter<savedUni.ViewHolder>{
         holder.uniName.setText(uni.getName());
         holder.uniLocation.setText(uni.getLocation());
         holder.uniType.setText(uni.getType());
-        holder.uniImage.setImageResource(uni.getImageUrl());
+        Glide.with(context).load(uni.getImageUrl()).into(holder.uniImage);
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onRemoveClick(holder.getAdapterPosition());
+            }
+        });
+
 
 
 
@@ -50,6 +60,7 @@ public class savedUni  extends RecyclerView.Adapter<savedUni.ViewHolder>{
 
     @Override
     public int getItemCount() {
+
         return universityList.size();
     }
 

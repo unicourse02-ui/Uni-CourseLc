@@ -70,7 +70,7 @@ public class UniversityFragment extends Fragment {
     }
 
     public void filter() {
-        uniersitieList.clear();
+
 
         firestore.collection("Filter").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> PopularUnin = new ArrayList<>();
@@ -123,7 +123,7 @@ public class UniversityFragment extends Fragment {
 
 
                     if(courseMatch && PopularUnin.contains(name)){
-                        uniersitieList.add(new Universities(name, image, star, rating,about,application,contact,location));
+                        uniersitieList.add(new Universities(name, image, star, rating,about,application,contact,location,userId));
                         Log.d("HELLO","HELLO" + PopularUnin);
 
                     }

@@ -119,6 +119,7 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LandingPage.this, ComparisonPage.class);
+                intent.putExtra("id",user);
                 startActivity(intent);
             }
         });

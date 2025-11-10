@@ -37,6 +37,8 @@
 
         RecyclerView reycles;
 
+        String id;
+
 
 
 
@@ -55,6 +57,10 @@
 
             schoolsdata  =FirebaseFirestore.getInstance();
 
+
+            id = getArguments().getString("userId");
+
+
             selected_course = getArguments().getStringArrayList("SelectedCourses");
 
 
@@ -69,8 +75,6 @@
 
         }
         public void  getData(){
-            recycleDataCourse.clear();
-
             firestore = FirebaseFirestore.getInstance();
             firestore2 = FirebaseFirestore.getInstance();
 
@@ -119,7 +123,7 @@
                         }
 
                         if(matched && RecommendedUni.contains(name)){
-                            recycleDataCourse.add(new Universities(name, image, star, rating,about,application,contact,location));
+                            recycleDataCourse.add(new Universities(name, image, star, rating,about,application,contact,location,id));
                             Log.d("COURSETEST","COURSETEST" +RecommendedUni +""+ name );
                             Log.d("MactheduNI","MactheduNI"  +""+ matchUniversities );
 

@@ -11,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class tupDetail extends AppCompatActivity {
 
@@ -86,7 +92,7 @@ public class tupDetail extends AppCompatActivity {
             }
         });
 
-        setupApplyButton(ApplicationLink);
+        setupApplyButton(ApplicationLink,Image,Name);
 
 
 
@@ -120,8 +126,31 @@ public class tupDetail extends AppCompatActivity {
         });
     }
 
-    private void setupApplyButton(String url) {
+    private void setupApplyButton(String url,String image,String Name) {
+        String id = getIntent().getStringExtra("ID");
+        DatabaseReference firebase = FirebaseDatabase.getInstance().getReference("users");
         MaterialButton applyButton = findViewById(R.id.applyButton);
+        MaterialButton saveBut = findViewById(R.id.saveButton);
+
+        String key = firebase.push().getKey();
+        Map<String, Object> university = new HashMap<>();
+        university.put("name",Name);
+        university.put("Image", image);
+
+
+
+
+        saveBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebase.child(id).child("savedUniversities").child(key).setValue(university);
+
+
+
+
+            }
+        });
+
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

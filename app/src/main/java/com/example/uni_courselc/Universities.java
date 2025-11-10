@@ -15,8 +15,18 @@ public class Universities {
 
     private  String Address;
 
+    private String userId;
 
-    public Universities(String name, String img, int ratings, int stars,String about,String ApplicationLink,String Contact,String Address){
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public Universities(String name, String img, int ratings, int stars, String about, String ApplicationLink, String Contact, String Address, String userId){
 
         this.name = name;
         this.img = img;
@@ -26,6 +36,7 @@ public class Universities {
         this.ApplicationLink = ApplicationLink;
         this.Contact = Contact;
         this.Address= Address;
+        this.userId = userId;
 
 
 

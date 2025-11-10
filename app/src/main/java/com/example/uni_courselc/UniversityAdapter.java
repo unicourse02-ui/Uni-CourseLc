@@ -54,6 +54,8 @@ public class UniversityAdapter extends RecyclerView.Adapter<UniversityAdapter.Vi
                 intent.putExtra("ApplicationLink", universities.getApplicationLink());
                 intent.putExtra("Contact", universities.getContact());
                 intent.putExtra("Address", universities.getAddress());
+                intent.putExtra("ID", universities.getUserId());
+
 
 
                 context.startActivity(intent);

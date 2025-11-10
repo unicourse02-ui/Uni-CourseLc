@@ -5,20 +5,31 @@ public class University {
     private String name;
     private String location;
     private String type;
-    private int imageUrl;
+    private String imageUrl;
+    private  String key;
 
-    public University(String name, String location, String type, int imageUrl) {
-        this.name = name;
-        this.location = location;
-        this.type = type;
-        this.imageUrl = imageUrl;
+
+    public String getKey() {
+        return key;
     }
 
-    public int getImageUrl() {
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public University( String key ,String name, String imageUrl) {
+        this.name = name;
+        this.key = key;
+        this.imageUrl = imageUrl;
+
+
+    }
+
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(int imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
