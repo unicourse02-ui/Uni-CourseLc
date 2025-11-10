@@ -27,6 +27,8 @@ public class User_Data {
                     String username = snapshot.child("username").getValue(String.class);
                     String password = snapshot.child("password").getValue(String.class);
 
+
+
                     callback.onSuccess(name, email, username, password);
                 } else {
                     callback.onFailed("User not found in database");

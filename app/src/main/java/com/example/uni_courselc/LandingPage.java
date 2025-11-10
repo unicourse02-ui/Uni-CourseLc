@@ -16,6 +16,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+
 import com.example.uni_courselc.fragment.CoursesFragment;
 import com.example.uni_courselc.fragment.UniversityFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -26,6 +30,9 @@ public class LandingPage extends AppCompatActivity {
     TabLayout tab;
     ViewPager2 viewPager2;
     TextView usr_Name, greet;
+    DatabaseReference fire;
+
+
 
     ImageView homexml , userProfile , compareIcon;
 
@@ -46,9 +53,25 @@ public class LandingPage extends AppCompatActivity {
 
         compareIcon = findViewById(R.id.saveIcon);
         userProfile = findViewById(R.id.ProfileIcon);
+        ArrayList<String> selectedCourses = new ArrayList<>();
 
-        ArrayList<String> selectedCourses = getIntent().getStringArrayListExtra("SelectedCourses");
-        String user = getIntent().getStringExtra("userId");
+        String user = getIntent().getStringExtra("username");
+
+        fire= FirebaseDatabase.getInstance().getReference("users");
+
+        fire.child(user).child("selectedCourses").get().addOnSuccessListener(dataSnapshot -> {
+            for(DataSnapshot data : dataSnapshot.getChildren()){
+                String courses = data.getValue(String.class);
+
+                selectedCourses.add(courses);
+            }
+
+
+        });
+
+
+
+
 
         // Initialize User_Data
         userData = new User_Data();
@@ -63,6 +86,8 @@ public class LandingPage extends AppCompatActivity {
         if (user != null) {
             fetchUserDataFromDatabase(user);
         }
+
+
 
         Clock clock = new Clock();
         greet = findViewById(R.id.greeter);
@@ -123,6 +148,8 @@ public class LandingPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        filter(user);
     }
 
     private void fetchUserDataFromDatabase(String username) {
@@ -188,5 +215,22 @@ public class LandingPage extends AppCompatActivity {
         }
 
         startActivity(intent);
+    }
+
+
+    public void filter(String user){
+        homexml = findViewById(R.id.homeIcon);
+
+        homexml.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LandingPage.this,Filter_Page.class);
+                intent.putExtra("username", user);
+
+                startActivity(intent);
+
+            }
+        });
+
     }
 }

@@ -83,6 +83,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public boolean validator(){
+        boolean result = false;
+
+        databaseRef = FirebaseDatabase.getInstance().getReference("users");
+        /// wait lang
+
+
+
+        return result;
+    }
+
     public void checkUser(String Username, String Password) {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("users");
         Query checkUserDatabase = reference.orderByChild("username").equalTo(Username);
@@ -110,15 +123,18 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("DEBUG: Username from DB: " + usernameFromDB);
 
                         if (passwordFromDB != null && passwordFromDB.equals(Password)) {
+
+
+
                             // Login successful
                             Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(MainActivity.this, Filter_Page.class);
+                            Intent intent = new Intent(MainActivity.this, LandingPage.class);
 
                             intent.putExtra("name", nameFromDB);
                             intent.putExtra("email", emailFromDB);
                             intent.putExtra("username", usernameFromDB);
                             intent.putExtra("password", passwordFromDB);
-
+                            intent.putExtra("userId",usernameFromDB);
                             startActivity(intent);
                             return;
                         }

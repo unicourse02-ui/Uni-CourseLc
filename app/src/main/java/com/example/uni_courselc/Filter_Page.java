@@ -49,6 +49,7 @@ public class Filter_Page extends AppCompatActivity {
 
     List<String> Selected_Course = new ArrayList<>();
 
+    List<String> FilteredSelected_Courses = new ArrayList<>();
     Chip c ;
 
 
@@ -66,6 +67,13 @@ public class Filter_Page extends AppCompatActivity {
         LinearLayout linear = findViewById(R.id.linear);
         data = FirebaseFirestore.getInstance();
         btn = findViewById(R.id.filerButton);
+
+
+
+
+
+
+
 
 
         data.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -142,9 +150,6 @@ public class Filter_Page extends AppCompatActivity {
                     chips.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         choice_counter();
 
-                        for (String selected : Selected_Course) {
-                            Log.d("Filter_Page", "Selected: " + selected);
-                        }
                     });
 
                 }
@@ -158,9 +163,8 @@ public class Filter_Page extends AppCompatActivity {
                         .getReference("users")
                         .child(user).child("selectedCourses");
 
-                dbRef.setValue(Selected_Course);
+                dbRef.setValue(FilteredSelected_Courses);
                 Intent intent = new Intent(Filter_Page.this, LandingPage.class);
-                intent.putStringArrayListExtra("SelectedCourses", new ArrayList<>(Selected_Course));
                 intent.putExtra("userId", user);
 
                 // ADD THESE LINES - Pass user data from Filter_Page to LandingPage
@@ -185,7 +189,6 @@ public class Filter_Page extends AppCompatActivity {
         int counter = 0;
         int total = 0;
 
-        Selected_Course.clear();
         for(ChipGroup group: chipgroup){
             total += group.getChildCount();
             for(int i = 0; i< group.getChildCount();i++){
@@ -194,6 +197,16 @@ public class Filter_Page extends AppCompatActivity {
                     Selected_Course.add(chip.getText().toString());
                     counter ++;
                 }
+            }
+        }
+
+        for(String unfiltered: Selected_Course){
+                if(!FilteredSelected_Courses.contains(unfiltered)){
+                    FilteredSelected_Courses.add(unfiltered);
+
+                btn.setText(counter + " of " + total + "  Selected" + FilteredSelected_Courses);
+
+
             }
         }
 

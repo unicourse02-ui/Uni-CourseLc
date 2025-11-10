@@ -127,8 +127,10 @@ public class SignUp extends AppCompatActivity {
         databaseRef.child(username).setValue(helperClass).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(SignUp.this, "User saved!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                Intent intent = new Intent(SignUp.this, Filter_Page.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
+
                 finish();
             } else {
                 Toast.makeText(SignUp.this, "Failed to save user", Toast.LENGTH_SHORT).show();

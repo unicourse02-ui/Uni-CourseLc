@@ -48,7 +48,8 @@ public class savedUni  extends RecyclerView.Adapter<savedUni.ViewHolder>{
 
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 listener.onRemoveClick(holder.getAdapterPosition());
             }
         });
