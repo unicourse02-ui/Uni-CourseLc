@@ -27,6 +27,7 @@ import com.google.android.material.chip.ChipGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -36,7 +37,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class Filter_Page extends AppCompatActivity {
     Button btn;
     List<ChipGroup> chipgroup = new ArrayList<>();
-
     FirebaseFirestore data;
     DatabaseReference dataref;
     List<String> Raw_Courses = new ArrayList<>();
@@ -69,6 +69,8 @@ public class Filter_Page extends AppCompatActivity {
         btn = findViewById(R.id.filerButton);
 
 
+        Intent intent2 = getIntent();
+        String user = intent2.getStringExtra("username");
 
 
 
@@ -149,6 +151,7 @@ public class Filter_Page extends AppCompatActivity {
                     chipg.addView(chips);
                     chips.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         choice_counter();
+                        delete(user);
 
                     });
 
@@ -156,8 +159,8 @@ public class Filter_Page extends AppCompatActivity {
 
             }
 
-            Intent intent2 = getIntent();
-            String user = intent2.getStringExtra("username");
+
+
             btn.setOnClickListener(v -> {
                 DatabaseReference dbRef = FirebaseDatabase.getInstance()
                         .getReference("users")
@@ -177,6 +180,9 @@ public class Filter_Page extends AppCompatActivity {
             });
 
 
+            checked( user);
+
+
             choice_counter();
 
 
@@ -184,6 +190,106 @@ public class Filter_Page extends AppCompatActivity {
 
 
     }
+
+    public void delete(String user){
+        dataref = FirebaseDatabase.getInstance().getReference("users");
+
+        dataref.child(user).child("selectedCourses").get().addOnSuccessListener(dataSnapshot -> {
+
+
+            ArrayList<String> courses = new ArrayList<>();
+
+                for(DataSnapshot snap: dataSnapshot.getChildren()){
+                    String coursename = snap.getValue(String.class);
+
+                    if(coursename != null){
+                        courses.add(coursename);
+                    }
+
+                }
+
+
+
+
+                for(ChipGroup chips : chipgroup){
+                    for(int i = 0 ; i < chips.getChildCount(); i++){
+                        Chip chip = (Chip) chips.getChildAt(i);
+                        String courseNAme = chip.getText().toString();
+
+                        if(!chip.isChecked() && courses.contains(courseNAme)){
+                            FilteredSelected_Courses.remove(courseNAme);
+
+                        }
+
+
+                    }
+
+
+
+
+
+                }
+
+
+        });
+
+
+
+
+
+
+    }
+
+
+    public void checked(String id){
+        dataref = FirebaseDatabase.getInstance().getReference("users");
+
+        dataref.child(id).child("selectedCourses").get().addOnSuccessListener(dataSnapshot -> {
+
+
+            ArrayList <String> checked = new ArrayList<>();
+            for(DataSnapshot datas : dataSnapshot.getChildren()){
+                String datass = datas.getValue(String.class);
+
+                checked.add(datass);
+
+
+
+            }
+
+
+            for(ChipGroup chips : chipgroup){
+                int total = chips.getChildCount();
+                for(int i = 0; i < chips.getChildCount(); i++){
+                    Chip chip =  (Chip) chips.getChildAt(i);
+                    String chipsString = chip.getText().toString();
+
+                    if(checked.contains(chipsString)){
+                        chip.setChecked(true);
+
+                    }
+
+
+                }
+
+
+            }
+
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+    }
+
 
     public void choice_counter(){
         int counter = 0;
