@@ -1,9 +1,11 @@
 package com.example.uni_courselc;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -23,11 +25,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class tupDetail extends AppCompatActivity {
+    FirebaseFirestore fire;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +48,12 @@ public class tupDetail extends AppCompatActivity {
             return insets;
         });
 
+        fire = FirebaseFirestore.getInstance();
+
         info();
         courseClick();
+        diplayCourses();
+
     }
 
 
@@ -74,9 +86,6 @@ public class tupDetail extends AppCompatActivity {
         Addresss =findViewById(R.id.addressText);
 
 
-
-
-
         uni.setText(Name);
         Glide.with(this).load(Image).into(image);
         ratings.setRating(Star);
@@ -94,10 +103,73 @@ public class tupDetail extends AppCompatActivity {
 
         setupApplyButton(ApplicationLink,Image,Name);
 
+    }
+
+    public void diplayCourses(){
+        Intent intent = getIntent();
+        String Name = intent.getStringExtra("Name");
+
+
+
+
+        fire.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for(QueryDocumentSnapshot data : queryDocumentSnapshots){
+                List<String> nameCoursesFiltred = new ArrayList<>();
+                List<String> nameUni = new ArrayList<>();
+                String universityName = data.getString("Name");
+                nameUni.add(universityName);
+
+
+                for(String i :nameUni){
+                    if(Name.equals(i)){
+                        List<String> rawCourses = (List<String>) data.get("Course");
+                        LinearLayout liner = findViewById(R.id.contents);
+                        if(rawCourses instanceof List<?>){
+                            for(Object o : (List<?>) rawCourses){
+                                nameCoursesFiltred.add(String.valueOf(o));
+                                TextView text = new TextView(this);
+
+                                String course = String.valueOf(o);
+
+                                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                );
+                                params.setMargins(0, 0, 0, 6);
+                                text.setText(course);
+                                text.setLayoutParams(params);
+                                text.setTextSize(16);
+                                text.setTextColor(Color.BLACK);
+                                liner.addView(text);
+                            }
+
+                            }
+                        }
+                        break;
+                    }
+                }
+
+
+
+
+
+
+
+        });
+
+
+
+
+
+
+
 
 
 
     }
+
+
+
 
 
 
