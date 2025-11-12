@@ -209,7 +209,7 @@ public class Profile_Page extends AppCompatActivity {
                     }
 
                     // Navigate to EditProfile activity using startActivityForResult
-                    Intent intent = new Intent(Profile_Page.this, EditProfile.class);
+                    Intent intent = new Intent(Profile_Page.this, EditDatabase.class);
                     Log.d("Profile_Page", "Intent created for EditProfile");
 
                     // Pass current user data to edit profile activity

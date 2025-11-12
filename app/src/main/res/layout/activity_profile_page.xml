@@ -269,9 +269,9 @@
         <!-- ADD ID for Edit Profile button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/editProfileButton"
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Profile"/>
+            android:layout_marginTop="20dp"
+            android:text="Edit Profile" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
