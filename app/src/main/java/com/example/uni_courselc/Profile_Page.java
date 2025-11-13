@@ -89,7 +89,6 @@ public class Profile_Page extends AppCompatActivity {
 
         if (intent != null) {
             currentName = intent.getStringExtra("name");
-            currentEmail = intent.getStringExtra("email");
             currentUsername = intent.getStringExtra("username");
             currentPassword = intent.getStringExtra("password");
 
@@ -197,7 +196,7 @@ public class Profile_Page extends AppCompatActivity {
                     Log.d("Profile_Page", "Edit Profile button clicked");
 
                     // Check if we have user data
-                    if (currentName == null || currentEmail == null || currentUsername == null) {
+                    if (currentName == null || currentUsername == null) {
                         Log.e("Profile_Page", "Missing user data for EditProfile");
                         Toast.makeText(Profile_Page.this, "User data not available", Toast.LENGTH_SHORT).show();
                         return;
@@ -208,8 +207,6 @@ public class Profile_Page extends AppCompatActivity {
                     Log.d("Profile_Page", "Intent created for EditProfile");
 
                     // Pass current user data to edit profile activity
-                    intent.putExtra("name", currentName);
-                    intent.putExtra("email", currentEmail);
                     intent.putExtra("username", currentUsername);
                     intent.putExtra("password", currentPassword);
 

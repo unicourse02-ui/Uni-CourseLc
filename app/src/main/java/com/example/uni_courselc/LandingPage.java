@@ -198,6 +198,10 @@ public class LandingPage extends AppCompatActivity {
     private void navigateToProfile() {
         Intent intent = new Intent(LandingPage.this, Profile_Page.class);
 
+        Log.d("testing","testing" + currentUserName);
+        Log.d("testing","testing" + currentUserPassword);
+
+
         // Pass the user data we have
         if (currentUserName != null && currentUserUsername != null) {
             intent.putExtra("name", currentUserName);
