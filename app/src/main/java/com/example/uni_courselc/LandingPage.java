@@ -37,7 +37,7 @@ public class LandingPage extends AppCompatActivity {
     ImageView homexml , userProfile , compareIcon;
 
     // Add these to store user data
-    private String currentUserName, currentUserEmail, currentUserUsername, currentUserPassword;
+    private String currentUserName, currentUserUsername, currentUserPassword;
     private User_Data userData;
 
     @Override
@@ -78,7 +78,6 @@ public class LandingPage extends AppCompatActivity {
 
         // Get user data from intent first (if available)
         currentUserName = getIntent().getStringExtra("name");
-        currentUserEmail = getIntent().getStringExtra("email");
         currentUserUsername = getIntent().getStringExtra("username");
         currentUserPassword = getIntent().getStringExtra("password");
 
@@ -155,10 +154,9 @@ public class LandingPage extends AppCompatActivity {
     private void fetchUserDataFromDatabase(String username) {
         userData.getAllUserData(username, new User_Data.GetAllDataCallback() {
             @Override
-            public void onSuccess(String name, String email, String username, String password) {
+            public void onSuccess(String name, String username, String password) {
                 // Store the user data
                 currentUserName = name;
-                currentUserEmail = email;
                 currentUserUsername = username;
                 currentUserPassword = password;
 
@@ -201,15 +199,13 @@ public class LandingPage extends AppCompatActivity {
         Intent intent = new Intent(LandingPage.this, Profile_Page.class);
 
         // Pass the user data we have
-        if (currentUserName != null && currentUserEmail != null && currentUserUsername != null) {
+        if (currentUserName != null && currentUserUsername != null) {
             intent.putExtra("name", currentUserName);
-            intent.putExtra("email", currentUserEmail);
             intent.putExtra("username", currentUserUsername);
             intent.putExtra("password", currentUserPassword);
         } else {
             // Fallback: use data from intent if we don't have the fetched data
             intent.putExtra("name", getIntent().getStringExtra("name"));
-            intent.putExtra("email", getIntent().getStringExtra("email"));
             intent.putExtra("username", getIntent().getStringExtra("username"));
             intent.putExtra("password", getIntent().getStringExtra("password"));
         }

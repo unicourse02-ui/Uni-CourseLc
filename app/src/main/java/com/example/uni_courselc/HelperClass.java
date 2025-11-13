@@ -2,7 +2,6 @@ package com.example.uni_courselc;
 
 public class HelperClass {
     private String name;
-    private String email;
     private String username;
     private String password;
 
@@ -10,9 +9,8 @@ public class HelperClass {
         // Default constructor required for Firebase
     }
 
-    public HelperClass(String name, String email, String username, String password) {
+    public HelperClass(String name, String username, String password) {
         this.name = name;
-        this.email = email;
         this.username = username;
         this.password = password;
     }
@@ -24,14 +22,6 @@ public class HelperClass {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getUsername() {

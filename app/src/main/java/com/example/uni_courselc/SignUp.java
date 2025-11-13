@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,8 @@ public class SignUp extends AppCompatActivity {
     TextView RegisterUser;
     TextView RegisterPass;
     TextView RegisterName;
-    TextView RegisterEmail;
+    TextView RegisterConfirmPass;
+    CheckBox CheckboxTerms;
 
     // Password pattern: at least 12 characters, at least one number, and at least one special character
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[0-9])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?=\\S+$).{12,}$");
@@ -47,20 +49,21 @@ public class SignUp extends AppCompatActivity {
         RegisterUser = findViewById(R.id.registerUserName);
         RegisterPass = findViewById(R.id.registerPassword);
         RegisterName = findViewById(R.id.registerName);
-        RegisterEmail = findViewById(R.id.registerEmail);
+        RegisterConfirmPass = findViewById(R.id.registerConfirmPassword);
+        CheckboxTerms = findViewById(R.id.checkboxTerms);
 
         Signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = RegisterName.getText().toString();
-                String email = RegisterEmail.getText().toString();
                 String username = RegisterUser.getText().toString();
                 String password = RegisterPass.getText().toString();
+                String confirmPassword = RegisterConfirmPass.getText().toString();
 
-                if (!validateName() | !validateEmail() | !validateUsername() | !validatePassword()) {
+                if (!validateName() | !validateUsername() | !validatePassword() | !validateConfirmPassword() | !validateTerms()) {
                     // Validation failed
                 } else {
-                    registerUser(name, email, username, password);
+                    registerUser(name, username, password);
                 }
             }
         });
@@ -73,20 +76,6 @@ public class SignUp extends AppCompatActivity {
             return false;
         } else {
             RegisterName.setError(null);
-            return true;
-        }
-    }
-
-    public Boolean validateEmail() {
-        String val = RegisterEmail.getText().toString();
-        if (val.isEmpty()) {
-            RegisterEmail.setError("Email cannot be empty");
-            return false;
-        } else if (!val.endsWith("@email.com")) {
-            RegisterEmail.setError("Email must end with @email.com");
-            return false;
-        } else {
-            RegisterEmail.setError(null);
             return true;
         }
     }
@@ -119,9 +108,41 @@ public class SignUp extends AppCompatActivity {
         }
     }
 
-    public void registerUser(String name, String email, String username, String password) {
-        // Use HelperClass to store user data
-        HelperClass helperClass = new HelperClass(name, email, username, password);
+    public Boolean validateConfirmPassword() {
+        String password = RegisterPass.getText().toString();
+        String confirmPassword = RegisterConfirmPass.getText().toString();
+
+        if (confirmPassword.isEmpty()) {
+            RegisterConfirmPass.setError("Please confirm your password");
+            return false;
+        } else if (!password.equals(confirmPassword)) {
+            RegisterConfirmPass.setError("Passwords do not match");
+            return false;
+        } else {
+            RegisterConfirmPass.setError(null);
+            return true;
+        }
+    }
+
+    public Boolean validateTerms() {
+        if (!CheckboxTerms.isChecked()) {
+            Toast.makeText(SignUp.this, "Please agree to the Terms and Conditions", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    public void onTermsAndConditionsClicked(View view) {
+        // You can implement your terms and conditions display logic here
+        // For example, show a dialog or navigate to a TermsActivity
+        Toast.makeText(this, "Display Terms and Conditions", Toast.LENGTH_SHORT).show();
+        // Intent intent = new Intent(this, TermsActivity.class);
+        // startActivity(intent);
+    }
+
+    public void registerUser(String name, String username, String password) {
+        // Use HelperClass to store user data (updated to remove email parameter)
+        HelperClass helperClass = new HelperClass(name, username, password);
 
         // Use username as the key instead of auto-generated ID
         databaseRef.child(username).setValue(helperClass).addOnCompleteListener(task -> {
@@ -130,7 +151,6 @@ public class SignUp extends AppCompatActivity {
                 Intent intent = new Intent(SignUp.this, Filter_Page.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
-
                 finish();
             } else {
                 Toast.makeText(SignUp.this, "Failed to save user", Toast.LENGTH_SHORT).show();

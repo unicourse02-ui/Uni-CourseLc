@@ -142,45 +142,7 @@
                     android:background="#CCCCCC"/>
 
                 <!-- Second Row - Email -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:layout_marginVertical="5dp"
-                    >
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/user"
-                        />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="15dp"
-                        >
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:textSize="15sp"
-                            android:textStyle="bold"
-                            android:textColor="@color/black"
-                            />
-                        <!-- ADD ID for email value -->
-                        <TextView
-                            android:id="@+id/textViewEmailValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:textSize="12sp"/>
-                    </LinearLayout>
-                </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="#CCCCCC"/>
+
 
                 <!-- Third Row - Username -->
                 <LinearLayout

@@ -14,10 +14,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class EditProfile extends AppCompatActivity {
 
-    private TextInputEditText editTextUsername, editTextName, editTextEmail, editTextPassword;
+    private TextInputEditText editTextUsername, editTextName, editTextPassword;
     private MaterialButton backButton, saveButton;
 
-    private String currentUsername, currentName, currentEmail, currentPassword;
+    private String currentUsername, currentName, currentPassword;
     private DatabaseReference databaseRef;
 
     @Override
@@ -41,7 +41,6 @@ public class EditProfile extends AppCompatActivity {
     private void initializeViews() {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextName = findViewById(R.id.editTextName);
-        editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         backButton = findViewById(R.id.backButton);
         saveButton = findViewById(R.id.saveButton);
@@ -51,14 +50,12 @@ public class EditProfile extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null) {
             currentName = intent.getStringExtra("name");
-            currentEmail = intent.getStringExtra("email");
             currentUsername = intent.getStringExtra("username");
             currentPassword = intent.getStringExtra("password");
 
             // Set current data to fields
             if (currentUsername != null) editTextUsername.setText(currentUsername);
             if (currentName != null) editTextName.setText(currentName);
-            if (currentEmail != null) editTextEmail.setText(currentEmail);
         } else {
             Toast.makeText(this, "No user data found", Toast.LENGTH_SHORT).show();
             finish();
@@ -84,7 +81,6 @@ public class EditProfile extends AppCompatActivity {
     private void saveUserData() {
         // Get updated values
         String updatedName = editTextName.getText().toString().trim();
-        String updatedEmail = editTextEmail.getText().toString().trim();
         String updatedPassword = editTextPassword.getText().toString().trim();
 
         // Basic validation
@@ -93,15 +89,6 @@ public class EditProfile extends AppCompatActivity {
             return;
         }
 
-        if (updatedEmail.isEmpty()) {
-            editTextEmail.setError("Email cannot be empty");
-            return;
-        }
-
-        if (!updatedEmail.endsWith("@email.com")) {
-            editTextEmail.setError("Email must end with @email.com");
-            return;
-        }
 
         // Use current password if new one is empty
         String finalPassword = updatedPassword.isEmpty() ? currentPassword : updatedPassword;
@@ -115,11 +102,11 @@ public class EditProfile extends AppCompatActivity {
         }
 
         // Update in Firebase
-        updateUserInDatabase(updatedName, updatedEmail, finalPassword);
+        updateUserInDatabase(updatedName, currentUsername, finalPassword);
     }
 
     private void updateUserInDatabase(String name, String email, String password) {
-        HelperClass updatedUser = new HelperClass(name, email, currentUsername, password);
+        HelperClass updatedUser = new HelperClass(name, currentUsername, password);
 
         databaseRef.child(currentUsername).setValue(updatedUser)
                 .addOnSuccessListener(aVoid -> {
@@ -128,7 +115,6 @@ public class EditProfile extends AppCompatActivity {
                     // Return to Profile_Page with updated data
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("name", name);
-                    resultIntent.putExtra("email", email);
                     resultIntent.putExtra("username", currentUsername);
                     resultIntent.putExtra("password", password);
                     setResult(RESULT_OK, resultIntent);

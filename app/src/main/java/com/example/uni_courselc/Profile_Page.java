@@ -71,7 +71,6 @@ public class Profile_Page extends AppCompatActivity {
 
         // Account information section
         textViewNameValue = findViewById(R.id.textViewNameValue);
-        textViewEmailValue = findViewById(R.id.textViewEmailValue);
         textViewUsernameValue = findViewById(R.id.textViewUsernameValue);
         textViewPasswordValue = findViewById(R.id.textViewPasswordValue);
 
@@ -97,8 +96,8 @@ public class Profile_Page extends AppCompatActivity {
             Log.d("Profile_Page", "Intent data - Name: " + currentName + ", Email: " + currentEmail + ", Username: " + currentUsername);
 
             // If we have all data, update UI immediately
-            if (currentName != null && currentEmail != null && currentUsername != null) {
-                updateUserProfile(currentName, currentEmail, currentUsername, currentPassword);
+            if (currentName != null && currentUsername != null) {
+                updateUserProfile(currentName, currentUsername, currentPassword);
             }
 
             // Also fetch fresh data from database to ensure we have the latest
@@ -116,17 +115,16 @@ public class Profile_Page extends AppCompatActivity {
 
         userData.getAllUserData(username, new User_Data.GetAllDataCallback() {
             @Override
-            public void onSuccess(String name, String email, String username, String password) {
+            public void onSuccess(String name, String username, String password) {
                 Log.d("Profile_Page", "Database fetch successful");
 
                 // Update the current user data with fresh data from database
                 currentName = name;
-                currentEmail = email;
                 currentUsername = username;
                 currentPassword = password;
 
                 // Update UI with fresh data from database
-                updateUserProfile(name, email, username, password);
+                updateUserProfile(name, username, password);
             }
 
             @Override
@@ -138,7 +136,7 @@ public class Profile_Page extends AppCompatActivity {
         });
     }
 
-    private void updateUserProfile(String name, String email, String username, String password) {
+    private void updateUserProfile(String name, String username, String password) {
         Log.d("Profile_Page", "Updating UI with user data");
 
         runOnUiThread(() -> {
@@ -156,9 +154,6 @@ public class Profile_Page extends AppCompatActivity {
                 textViewNameValue.setText(name != null ? name : "Not Available");
             }
 
-            if (textViewEmailValue != null) {
-                textViewEmailValue.setText(email != null ? email : "Not Available");
-            }
 
             if (textViewUsernameValue != null) {
                 textViewUsernameValue.setText(username != null ? username : "Not Available");
@@ -245,7 +240,7 @@ public class Profile_Page extends AppCompatActivity {
                 currentPassword = updatedPassword;
 
                 // Update UI with new data
-                updateUserProfile(currentName, currentEmail, currentUsername, currentPassword);
+                updateUserProfile(currentName, currentUsername, currentPassword);
 
                 Log.d("Profile_Page", "Profile updated successfully from EditProfile");
                 Toast.makeText(this, "Profile updated successfully!", Toast.LENGTH_SHORT).show();
@@ -268,7 +263,6 @@ public class Profile_Page extends AppCompatActivity {
 
         // Pass all the user data back to LandingPage
         intent.putExtra("name", currentName);
-        intent.putExtra("email", currentEmail);
         intent.putExtra("username", currentUsername);
         intent.putExtra("password", currentPassword);
 

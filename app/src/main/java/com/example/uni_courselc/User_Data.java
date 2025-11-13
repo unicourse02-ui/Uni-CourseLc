@@ -23,13 +23,12 @@ public class User_Data {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     String name = snapshot.child("name").getValue(String.class);
-                    String email = snapshot.child("email").getValue(String.class);
                     String username = snapshot.child("username").getValue(String.class);
                     String password = snapshot.child("password").getValue(String.class);
 
 
 
-                    callback.onSuccess(name, email, username, password);
+                    callback.onSuccess(name, username, password);
                 } else {
                     callback.onFailed("User not found in database");
                 }
@@ -43,11 +42,11 @@ public class User_Data {
     }
 
     // Method to update user data
-    public void updateUserData(String username, String name, String email, String password, UpdateUserCallback callback) {
+    public void updateUserData(String username, String name, String password, UpdateUserCallback callback) {
         DatabaseReference userRef = data.child(username);
 
         // Create updated user data
-        HelperClass updatedUser = new HelperClass(name, email, username, password);
+        HelperClass updatedUser = new HelperClass(name, username, password);
 
         userRef.setValue(updatedUser)
                 .addOnSuccessListener(aVoid -> {
@@ -85,7 +84,7 @@ public class User_Data {
 
     // Callback interfaces
     public interface GetAllDataCallback {
-        void onSuccess(String name, String email, String username, String password);
+        void onSuccess(String name, String username, String password);
         void onFailed(String error);
     }
 
