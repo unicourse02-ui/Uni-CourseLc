@@ -2,4 +2,30 @@
     <string name="app_name">Uni-CourseLC</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="terms_and_conditions_content"><![CDATA[
+Last Updated: January 2024
+
+1. Acceptance of Terms
+By creating an account on UniCourseLC, you agree to be bound by these Terms and Conditions.
+
+2. User Account
+You must provide accurate information when creating an account.
+
+3. Data Collection and Privacy
+We collect and process your personal data in accordance with our Privacy Policy.
+
+4. Use of Service
+You agree to use UniCourseLC for lawful purposes only.
+
+5. Intellectual Property
+All content is for personal, non-commercial use only.
+
+6. Limitation of Liability
+UniCourseLC provides university information for reference purposes only.
+
+7. Account Termination
+We reserve the right to suspend accounts that violate these terms.
+
+Contact: support@unicourselc.com
+]]></string>
 </resources>
