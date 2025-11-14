@@ -14,4 +14,15 @@
         android:id="@+id/Recycle_Courses"
         />
 
+    <TextView
+        android:id="@+id/noResultsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="No results found"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:visibility="gone" />
+
 </FrameLayout>

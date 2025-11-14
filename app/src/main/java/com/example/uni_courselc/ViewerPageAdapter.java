@@ -11,33 +11,36 @@ import com.example.uni_courselc.fragment.CoursesFragment;
 import com.example.uni_courselc.fragment.UniversityFragment;
 
 public class ViewerPageAdapter extends FragmentStateAdapter {
-    private  Bundle bundle;
+    private Bundle bundle;
 
     public ViewerPageAdapter(@NonNull FragmentActivity fragmentActivity, Bundle bundle) {
         super(fragmentActivity);
-        this.bundle=bundle;
+        this.bundle = bundle;
     }
 
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-
         switch (position){
-
             case 0:
                 UniversityFragment uniFragment = new UniversityFragment();
-                uniFragment.setArguments(bundle);
+                if (bundle != null) {
+                    uniFragment.setArguments(bundle);
+                }
                 return uniFragment;
             case 1:
-                CoursesFragment course =  new CoursesFragment();
-                course.setArguments(bundle);
-                return  course;
+                CoursesFragment course = new CoursesFragment();
+                if (bundle != null) {
+                    course.setArguments(bundle);
+                }
+                return course;
             default:
-                return  new UniversityFragment();
-
-
+                UniversityFragment defaultFragment = new UniversityFragment();
+                if (bundle != null) {
+                    defaultFragment.setArguments(bundle);
+                }
+                return defaultFragment;
         }
-
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.example.uni_courselc;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,6 +18,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
@@ -31,14 +34,17 @@ public class LandingPage extends AppCompatActivity {
     ViewPager2 viewPager2;
     TextView usr_Name, greet;
     DatabaseReference fire;
-
-
+    TextInputEditText searchField; // Add this
 
     ImageView homexml , userProfile , compareIcon;
 
     // Add these to store user data
     private String currentUserName, currentUserUsername, currentUserPassword;
     private User_Data userData;
+
+    // Search functionality variables
+    private boolean isSearching = false;
+    private String currentSearchQuery = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,8 @@ public class LandingPage extends AppCompatActivity {
 
         compareIcon = findViewById(R.id.saveIcon);
         userProfile = findViewById(R.id.ProfileIcon);
+        searchField = findViewById(R.id.searchField); // Initialize search field
+
         ArrayList<String> selectedCourses = new ArrayList<>();
 
         String user = getIntent().getStringExtra("username");
@@ -62,16 +70,9 @@ public class LandingPage extends AppCompatActivity {
         fire.child(user).child("selectedCourses").get().addOnSuccessListener(dataSnapshot -> {
             for(DataSnapshot data : dataSnapshot.getChildren()){
                 String courses = data.getValue(String.class);
-
                 selectedCourses.add(courses);
             }
-
-
         });
-
-
-
-
 
         // Initialize User_Data
         userData = new User_Data();
@@ -85,8 +86,6 @@ public class LandingPage extends AppCompatActivity {
         if (user != null) {
             fetchUserDataFromDatabase(user);
         }
-
-
 
         Clock clock = new Clock();
         greet = findViewById(R.id.greeter);
@@ -148,9 +147,68 @@ public class LandingPage extends AppCompatActivity {
             }
         });
 
+        // Setup search functionality
+        setupSearchFunctionality();
+
         filter(user);
     }
 
+    private void setupSearchFunctionality() {
+        searchField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                currentSearchQuery = s.toString().trim();
+                isSearching = !currentSearchQuery.isEmpty();
+
+                // Notify fragments about search query change
+                notifyFragmentsAboutSearch();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Clear search when back button is pressed in search field
+        searchField.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus && currentSearchQuery.isEmpty()) {
+                isSearching = false;
+                notifyFragmentsAboutSearch();
+            }
+        });
+    }
+
+    private void notifyFragmentsAboutSearch() {
+        // Get current fragment and notify about search
+        int currentItem = viewPager2.getCurrentItem();
+
+        // We'll use a Broadcast or Interface pattern to communicate with fragments
+        // For now, we'll update the bundle and refresh fragments
+
+        refreshCurrentFragment();
+    }
+
+    private void refreshCurrentFragment() {
+        // This method will trigger the current fragment to refresh with search filter
+        // We'll implement this by recreating the fragment with updated data
+        int currentPosition = viewPager2.getCurrentItem();
+
+        // Get the existing bundle and update it with search info
+        Bundle bundle = new Bundle();
+        bundle.putStringArrayList("SelectedCourses", getIntent().getStringArrayListExtra("SelectedCourses"));
+        bundle.putString("userId", getIntent().getStringExtra("username"));
+        bundle.putBoolean("isSearching", isSearching);
+        bundle.putString("searchQuery", currentSearchQuery);
+
+        // Update the adapter with new bundle
+        ViewerPageAdapter newPager = new ViewerPageAdapter(this, bundle);
+        viewPager2.setAdapter(newPager);
+        viewPager2.setCurrentItem(currentPosition, false);
+    }
+
+    // Rest of your existing methods remain the same...
     private void fetchUserDataFromDatabase(String username) {
         userData.getAllUserData(username, new User_Data.GetAllDataCallback() {
             @Override
@@ -201,7 +259,6 @@ public class LandingPage extends AppCompatActivity {
         Log.d("testing","testing" + currentUserName);
         Log.d("testing","testing" + currentUserPassword);
 
-
         // Pass the user data we have
         if (currentUserName != null && currentUserUsername != null) {
             intent.putExtra("name", currentUserName);
@@ -217,7 +274,6 @@ public class LandingPage extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     public void filter(String user){
         homexml = findViewById(R.id.homeIcon);
 
@@ -226,11 +282,8 @@ public class LandingPage extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(LandingPage.this,Filter_Page.class);
                 intent.putExtra("username", user);
-
                 startActivity(intent);
-
             }
         });
-
     }
 }

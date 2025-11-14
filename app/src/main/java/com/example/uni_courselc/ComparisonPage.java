@@ -25,6 +25,7 @@ public class ComparisonPage extends AppCompatActivity {
     RecyclerView recyclerView;
     List<University> savedList;
     savedUni adapter;
+    String currentUserId; // Store user ID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,29 +40,26 @@ public class ComparisonPage extends AppCompatActivity {
         });
 
         String id = getIntent().getStringExtra("id");
-
+        currentUserId = id; // Store user ID
 
         recyclerView = findViewById(R.id.savedUniRecyclerView);
         savedList = new ArrayList<>();
+
+        // Pass user ID to the adapter
         adapter = new savedUni(this, savedList, position -> {
-
             University uni = savedList.get(position);
-
             FirebaseDatabase.getInstance()
                     .getReference("users")
                     .child(id)
                     .child("savedUniversities")
                     .child(uni.getKey())
                     .removeValue();
-
             savedList.remove(position);
             adapter.notifyItemRemoved(position);
-        });
+        }, id); // Pass user ID here
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-
-
 
         Log.d("TIS IS ISD","THISISD"+id);
 
@@ -69,10 +67,7 @@ public class ComparisonPage extends AppCompatActivity {
                 .getReference("users")
                 .child(id);
 
-
-
         databaseRef.child("savedUniversities").addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 savedList.clear();
@@ -82,20 +77,28 @@ public class ComparisonPage extends AppCompatActivity {
                     String name = snap.child("name").getValue(String.class);
                     String imageUrl = snap.child("Image").getValue(String.class);
 
-                    savedList.add(new University(key, name, imageUrl));
+                    // Try to get additional fields if they exist
+                    String location = snap.child("location").getValue(String.class);
+                    String type = snap.child("type").getValue(String.class);
 
+                    // Create University object with available data
+                    University university = new University(key, name, imageUrl);
+                    if (location != null) {
+                        university.setLocation(location);
+                    }
+                    if (type != null) {
+                        university.setType(type);
+                    }
 
+                    savedList.add(university);
                 }
                 adapter.notifyDataSetChanged();
-
-
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.e("ComparisonPage", "Error loading saved universities: " + error.getMessage());
             }
         });
-
     }
 }

@@ -1,158 +1,188 @@
-    package com.example.uni_courselc.fragment;
+package com.example.uni_courselc.fragment;
 
-    import android.os.Bundle;
+import android.os.Bundle;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import com.example.uni_courselc.CourseAdapter;
+import com.example.uni_courselc.Universities;
+import com.example.uni_courselc.R;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-    import androidx.fragment.app.Fragment;
-    import androidx.recyclerview.widget.GridLayoutManager;
-    import androidx.recyclerview.widget.LinearLayoutManager;
-    import androidx.recyclerview.widget.RecyclerView;
+public class CoursesFragment extends Fragment {
+    List<String> selected_course = new ArrayList<>();
+    List<Universities> recycleDataCourse = new ArrayList<>();
+    List<Universities> originalCoursesList = new ArrayList<>();
+    CourseAdapter courseadapt;
+    FirebaseFirestore firestore,firestore2;
+    RecyclerView reycles;
+    String id;
 
-    import android.util.Log;
-    import android.view.LayoutInflater;
-    import android.view.View;
-    import android.view.ViewGroup;
+    private boolean isSearching = false;
+    private String currentSearchQuery = "";
+    private TextView noResultsText;
 
-    import com.example.uni_courselc.CourseAdapter;
-    import com.example.uni_courselc.CourseData;
-    import com.example.uni_courselc.R;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View ui = inflater.inflate(R.layout.fragment_courses, container,false);
 
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.zip.Inflater;
+        reycles = ui.findViewById(R.id.Recycle_Courses);
+        noResultsText = ui.findViewById(R.id.noResultsText);
+        reycles.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-    import com.example.uni_courselc.Universities;
-    import com.google.firebase.firestore.FirebaseFirestore;
-    import com.google.firebase.firestore.QueryDocumentSnapshot;
+        courseadapt = new CourseAdapter(recycleDataCourse, getContext());
+        reycles.setAdapter(courseadapt);
 
-
-    public class CoursesFragment extends Fragment {
-        FirebaseFirestore schoolsdata;
-        List<String> selected_course = new ArrayList<>();
-
-        List<Universities> recycleDataCourse = new ArrayList<>();
-
-        CourseAdapter courseadapt;
-
-        FirebaseFirestore firestore,firestore2;
-
-        RecyclerView reycles;
-
-        String id;
-
-
-
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View ui = inflater.inflate(R.layout.fragment_courses, container,false);
-
-
-            reycles = ui.findViewById(R.id.Recycle_Courses);
-
-            reycles.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-            courseadapt = new CourseAdapter(recycleDataCourse,getContext());
-            reycles.setAdapter(courseadapt);
-
-            schoolsdata  =FirebaseFirestore.getInstance();
-
-
+        // Get arguments
+        if (getArguments() != null) {
             id = getArguments().getString("userId");
-
-
             selected_course = getArguments().getStringArrayList("SelectedCourses");
-
-
-            Log.d("UniversityCoursesSelected", "Selected courses: " + selected_course);
-
-            getData();
-
-
-
-
-            return ui;
-
+            isSearching = getArguments().getBoolean("isSearching", false);
+            currentSearchQuery = getArguments().getString("searchQuery", "");
         }
-        public void  getData(){
-            firestore = FirebaseFirestore.getInstance();
-            firestore2 = FirebaseFirestore.getInstance();
 
-            List<String> RecommendedUni = new ArrayList<>();
-            firestore2.collection("Filter").get().addOnSuccessListener(queryDocumentSnapshots -> {
-                for(QueryDocumentSnapshot filterData : queryDocumentSnapshots){
+        Log.d("CoursesFragment", "Selected courses: " + selected_course);
+        loadRecommendedUniversities();
 
-                    List<String> RecommendedList = (List<String>) filterData.get("Recommended");
-                    if (RecommendedList != null&& !RecommendedList.isEmpty()){
-                        RecommendedUni.addAll(RecommendedList);
+        return ui;
+    }
+
+    public void loadRecommendedUniversities(){
+        firestore = FirebaseFirestore.getInstance();
+        firestore2 = FirebaseFirestore.getInstance();
+
+        List<String> RecommendedUni = new ArrayList<>();
+        firestore2.collection("Filter").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for(QueryDocumentSnapshot filterData : queryDocumentSnapshots){
+                List<String> RecommendedList = (List<String>) filterData.get("Recommended");
+                if (RecommendedList != null && !RecommendedList.isEmpty()){
+                    RecommendedUni.addAll(RecommendedList);
+                    Log.d("RecommendedList", "Recommended universities: " + RecommendedList);
+                }
+            }
+
+            firestore.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                recycleDataCourse.clear();
+                originalCoursesList.clear();
+
+                for(QueryDocumentSnapshot universityDoc : queryDocumentSnapshots1){
+                    String name = universityDoc.getString("Name");
+                    String image = universityDoc.getString("ImgUrl");
+                    Double ratingDouble = universityDoc.getDouble("rating");
+                    Double starDouble = universityDoc.getDouble("star");
+                    String about = universityDoc.getString("About");
+                    String application = universityDoc.getString("ApplicationLink");
+                    String contact = universityDoc.getString("Contact");
+                    String location = universityDoc.getString("Location");
+
+                    int rating = (ratingDouble != null) ? ratingDouble.intValue() : 0;
+                    int star = (starDouble != null) ? starDouble.intValue() : 0;
+
+                    // Get course filter
+                    Object coursesObj = universityDoc.get("CourseFilter");
+                    List<String> courses_offered = new ArrayList<>();
+                    if (coursesObj instanceof List<?>) {
+                        for (Object o : (List<?>) coursesObj) {
+                            courses_offered.add(String.valueOf(o));
+                        }
                     }
 
-                }
+                    Log.d("CourseData", "University: " + name + ", Courses: " + courses_offered);
 
-                firestore.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots1 -> {
-                    for(QueryDocumentSnapshot Universities: queryDocumentSnapshots1){
-                        String name = Universities.getString("Name");
-                        String image = Universities.getString("ImgUrl");
-                        Double ratedouble = Universities.getDouble("rating");
-                        Double stardouble = Universities.getDouble("star");
-                        String about = Universities.getString("About");
-                        String application = Universities.getString("ApplicationLink");
-                        String contact =  Universities.getString("Contact");
-                        String location = Universities.getString("Location");
-                        int rating = (ratedouble != null) ? ratedouble.intValue() : 0;
-                        int star = (stardouble != null) ? stardouble.intValue() : 0;
-
-                        List<String> uniObject = (List<String>) Universities.get("CourseFilter");
-                        List<String> matchUniversities = new ArrayList<>();
-
-                        if(uniObject instanceof List<?>){
-                            for(Object obkect : (List<?>)uniObject){
-                                matchUniversities.add(String.valueOf(obkect));
-
-                            }
-                        }
-
-                        boolean matched = false;
-                        if(matchUniversities != null & !selected_course.isEmpty()){
-                            for(String selected_courses: selected_course){
-                                if(matchUniversities.contains(selected_courses)) {
-                                    matched = true;
+                    boolean courseMatch = false;
+                    // If user has selected courses, check if university offers any of them
+                    if(selected_course != null && !selected_course.isEmpty()){
+                        if(courses_offered.isEmpty()) {
+                            // If university has no CourseFilter, show it anyway
+                            courseMatch = true;
+                        } else {
+                            for(String userCourse : selected_course){
+                                if(courses_offered.contains(userCourse)){
+                                    courseMatch = true;
                                     break;
                                 }
                             }
                         }
-
-                        if(matched && RecommendedUni.contains(name)){
-                            recycleDataCourse.add(new Universities(name, image, star, rating,about,application,contact,location,id));
-                            Log.d("COURSETEST","COURSETEST" +RecommendedUni +""+ name );
-                            Log.d("MactheduNI","MactheduNI"  +""+ matchUniversities );
-
-
-
-                        }
-                        else{
-                            Log.d("NOOOO","COURSETEST" +RecommendedUni +""+ name );
-
-                        }
-
-
-
-
+                    } else {
+                        // If no courses selected, show all recommended universities
+                        courseMatch = true;
                     }
 
+                    // Only add if it's in recommended list AND matches courses (or no courses selected)
+                    if(RecommendedUni.contains(name) && courseMatch){
+                        Universities university = new Universities(name, image, rating, star, about, application, contact, location, id);
+                        originalCoursesList.add(university);
+                        Log.d("AddedCourse", "Added: " + name);
+                    }
+                }
 
+                // Apply search filter if active
+                if (isSearching && !currentSearchQuery.isEmpty()) {
+                    applySearchFilter(currentSearchQuery);
+                } else {
+                    recycleDataCourse.addAll(originalCoursesList);
                     courseadapt.notifyDataSetChanged();
-                });
+                    updateNoResultsVisibility();
+                }
 
+                Log.d("CoursesDebug", "Loaded " + originalCoursesList.size() + " recommended universities");
+            }).addOnFailureListener(e -> {
+                Log.e("CoursesFragment", "Error loading universities: " + e.getMessage());
             });
-
-
-
-
-
-
-        }
-
-
-
+        }).addOnFailureListener(e -> {
+            Log.e("CoursesFragment", "Error loading filter: " + e.getMessage());
+        });
     }
+
+    public void applySearchFilter(String query) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                recycleDataCourse.clear();
+
+                for (Universities university : originalCoursesList) {
+                    if (university.getName().toLowerCase().contains(query.toLowerCase())) {
+                        recycleDataCourse.add(university);
+                    }
+                }
+
+                courseadapt.notifyDataSetChanged();
+                updateNoResultsVisibility();
+                Log.d("SearchFilter", "Filtered courses: " + recycleDataCourse.size() + " for query: " + query);
+            });
+        }
+    }
+
+    private void updateNoResultsVisibility() {
+        if (noResultsText != null) {
+            if (recycleDataCourse.isEmpty()) {
+                noResultsText.setVisibility(View.VISIBLE);
+                noResultsText.setText(isSearching ? "No courses found for '" + currentSearchQuery + "'" : "No courses available");
+            } else {
+                noResultsText.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void updateSearch(String query, boolean searching) {
+        this.currentSearchQuery = query;
+        this.isSearching = searching;
+
+        if (searching && !query.isEmpty()) {
+            applySearchFilter(query);
+        } else {
+            recycleDataCourse.clear();
+            recycleDataCourse.addAll(originalCoursesList);
+            courseadapt.notifyDataSetChanged();
+            updateNoResultsVisibility();
+        }
+    }
+}

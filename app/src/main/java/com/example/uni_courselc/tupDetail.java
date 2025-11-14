@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +36,9 @@ import java.util.Map;
 
 public class tupDetail extends AppCompatActivity {
     FirebaseFirestore fire;
-
+    private MaterialButton saveBut;
+    private boolean isSaved = false;
+    private String currentUniversityKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,30 +55,20 @@ public class tupDetail extends AppCompatActivity {
 
         info();
         courseClick();
-        diplayCourses();
+        // diplayCourses() will be called after we load university data
 
     }
 
-
     public void info(){
-
         Intent intent = getIntent();
         ImageButton back;
-
         ImageView image;
-        TextView uni,ratig,About,Contacts,Addresss,Application;
+        TextView uni, About, Contacts, Addresss;
         RatingBar ratings;
 
         String Name = intent.getStringExtra("Name");
         String Image = intent.getStringExtra("Img");
-        String Rating = intent.getStringExtra("Rating");
-        int Star = intent.getIntExtra("Star",0);
-
-        String about = intent.getStringExtra("about");
-        String ApplicationLink = intent.getStringExtra("ApplicationLink");
-        String Contact = intent.getStringExtra("Contact");
-        String addresss = intent.getStringExtra("Address");
-
+        String userId = intent.getStringExtra("ID");
 
         image = findViewById(R.id.image);
         uni  = findViewById(R.id.uniName);
@@ -83,53 +76,135 @@ public class tupDetail extends AppCompatActivity {
         back = findViewById(R.id.back);
         About = findViewById(R.id.aboutText);
         Contacts = findViewById(R.id.contactText);
-        Addresss =findViewById(R.id.addressText);
-
+        Addresss = findViewById(R.id.addressText);
+        saveBut = findViewById(R.id.saveButton);
 
         uni.setText(Name);
-        Glide.with(this).load(Image).into(image);
-        ratings.setRating(Star);
-        About.setText(about);
-        Contacts.setText(Contact);
-        Addresss.setText(addresss);
+        if (Image != null) {
+            Glide.with(this).load(Image).into(image);
+        }
+
+        // Load complete university data from Firestore
+        loadUniversityDetails(Name, About, Contacts, Addresss, ratings, userId);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
-
             }
         });
 
-        setupApplyButton(ApplicationLink,Image,Name);
-
+        // setupApplyButton will be called after we load university data
     }
 
-    public void diplayCourses(){
-        Intent intent = getIntent();
-        String Name = intent.getStringExtra("Name");
+    private void loadUniversityDetails(String universityName, TextView aboutView, TextView contactView,
+                                       TextView addressView, RatingBar ratingBar, String userId) {
+        fire.collection("Universities")
+                .whereEqualTo("Name", universityName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // University found in Firestore
+                        QueryDocumentSnapshot document = (QueryDocumentSnapshot) queryDocumentSnapshots.getDocuments().get(0);
 
+                        String about = document.getString("About");
+                        String contact = document.getString("Contact");
+                        String address = document.getString("Location");
+                        String applicationLink = document.getString("ApplicationLink");
+                        Double rating = document.getDouble("rating");
+                        Double star = document.getDouble("star");
 
+                        // Update UI with loaded data
+                        if (about != null) aboutView.setText(about);
+                        if (contact != null) contactView.setText(contact);
+                        if (address != null) addressView.setText(address);
+                        if (star != null) ratingBar.setRating(star.floatValue());
 
+                        // Now setup buttons with complete data
+                        setupApplyButton(applicationLink, document.getString("ImgUrl"), universityName, userId);
 
-        fire.collection("Universities").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for(QueryDocumentSnapshot data : queryDocumentSnapshots){
-                List<String> nameCoursesFiltred = new ArrayList<>();
-                List<String> nameUni = new ArrayList<>();
-                String universityName = data.getString("Name");
-                nameUni.add(universityName);
+                        // Load courses for this university
+                        diplayCourses(universityName);
 
+                    } else {
+                        // University not found in Firestore, use default values
+                        aboutView.setText("Information about " + universityName);
+                        contactView.setText("Contact information not available");
+                        addressView.setText("Address not available");
+                        ratingBar.setRating(0);
 
-                for(String i :nameUni){
-                    if(Name.equals(i)){
+                        setupApplyButton("https://example.com",
+                                getIntent().getStringExtra("Img"),
+                                universityName, userId);
+                    }
+
+                    // Check if university is saved
+                    checkIfSaved(userId, universityName);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("tupDetail", "Error loading university details: " + e.getMessage());
+                    // Use default values on error
+                    aboutView.setText("Information about " + universityName);
+                    contactView.setText("Contact information not available");
+                    addressView.setText("Address not available");
+                    ratingBar.setRating(0);
+
+                    setupApplyButton("https://example.com",
+                            getIntent().getStringExtra("Img"),
+                            universityName, userId);
+                    checkIfSaved(userId, universityName);
+                });
+    }
+
+    // Rest of your methods (checkIfSaved, setSaveButtonState, diplayCourses, courseClick, setupApplyButton)
+    // remain the same as in the previous version...
+
+    private void checkIfSaved(String userId, String universityName) {
+        DatabaseReference firebase = FirebaseDatabase.getInstance().getReference("users");
+
+        firebase.child(userId).child("savedUniversities").get().addOnSuccessListener(dataSnapshot -> {
+            if (dataSnapshot.exists()) {
+                for (DataSnapshot snap : dataSnapshot.getChildren()) {
+                    String savedName = snap.child("name").getValue(String.class);
+                    if (universityName.equals(savedName)) {
+                        currentUniversityKey = snap.getKey();
+                        setSaveButtonState(true);
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    private void setSaveButtonState(boolean saved) {
+        isSaved = saved;
+        if (saved) {
+            saveBut.setText("Saved");
+            saveBut.setBackgroundColor(Color.parseColor("#2196F3"));
+            saveBut.setTextColor(Color.WHITE);
+            saveBut.setStrokeWidth(0);
+        } else {
+            saveBut.setText("Save");
+            saveBut.setBackgroundColor(Color.WHITE);
+            saveBut.setTextColor(Color.parseColor("#FF6200EE"));
+            saveBut.setStrokeWidth(2);
+        }
+    }
+
+    public void diplayCourses(String universityName) {
+        fire.collection("Universities")
+                .whereEqualTo("Name", universityName)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        QueryDocumentSnapshot data = (QueryDocumentSnapshot) queryDocumentSnapshots.getDocuments().get(0);
                         List<String> rawCourses = (List<String>) data.get("Course");
                         LinearLayout liner = findViewById(R.id.contents);
-                        if(rawCourses instanceof List<?>){
-                            for(Object o : (List<?>) rawCourses){
-                                nameCoursesFiltred.add(String.valueOf(o));
-                                TextView text = new TextView(this);
 
+                        if (rawCourses instanceof List<?>) {
+                            for (Object o : (List<?>) rawCourses) {
                                 String course = String.valueOf(o);
+                                TextView text = new TextView(this);
 
                                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                         LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -142,36 +217,63 @@ public class tupDetail extends AppCompatActivity {
                                 text.setTextColor(Color.BLACK);
                                 liner.addView(text);
                             }
-
-                            }
                         }
-                        break;
                     }
-                }
-
-
-
-
-
-
-
-        });
-
-
-
-
-
-
-
-
-
-
+                });
     }
 
+    // courseClick method remains the same...
 
+    private void setupApplyButton(String url, String image, String Name, String userId) {
+        DatabaseReference firebase = FirebaseDatabase.getInstance().getReference("users");
+        MaterialButton applyButton = findViewById(R.id.applyButton);
 
+        saveBut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isSaved) {
+                    if (currentUniversityKey != null) {
+                        firebase.child(userId).child("savedUniversities").child(currentUniversityKey).removeValue()
+                                .addOnSuccessListener(aVoid -> {
+                                    setSaveButtonState(false);
+                                    Toast.makeText(tupDetail.this, "Removed from saved universities", Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Toast.makeText(tupDetail.this, "Failed to remove", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                } else {
+                    String key = firebase.push().getKey();
+                    Map<String, Object> university = new HashMap<>();
+                    university.put("name", Name);
+                    university.put("Image", image);
 
+                    firebase.child(userId).child("savedUniversities").child(key).setValue(university)
+                            .addOnSuccessListener(aVoid -> {
+                                currentUniversityKey = key;
+                                setSaveButtonState(true);
+                                Toast.makeText(tupDetail.this, "University saved!", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> {
+                                Toast.makeText(tupDetail.this, "Failed to save", Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }
+        });
 
+        applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (url != null && !url.isEmpty()) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(tupDetail.this, "Application link not available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
 
     public void courseClick(){
         LinearLayout header, content;
@@ -194,43 +296,6 @@ public class tupDetail extends AppCompatActivity {
                     content.setVisibility(View.GONE);
                     text.setText("+");
                 }
-            }
-        });
-    }
-
-    private void setupApplyButton(String url,String image,String Name) {
-        String id = getIntent().getStringExtra("ID");
-        DatabaseReference firebase = FirebaseDatabase.getInstance().getReference("users");
-        MaterialButton applyButton = findViewById(R.id.applyButton);
-        MaterialButton saveBut = findViewById(R.id.saveButton);
-
-        String key = firebase.push().getKey();
-        Map<String, Object> university = new HashMap<>();
-        university.put("name",Name);
-        university.put("Image", image);
-
-
-
-
-        saveBut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                firebase.child(id).child("savedUniversities").child(key).setValue(university);
-
-
-
-
-            }
-        });
-
-        applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(url));
-                startActivity(intent);
             }
         });
     }
