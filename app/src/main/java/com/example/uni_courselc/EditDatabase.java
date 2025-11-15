@@ -38,7 +38,7 @@ public class EditDatabase extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextName = findViewById(R.id.editTextName);
         editTextPassword = findViewById(R.id.editTextPassword);
-        editTextConfirmPassword = findViewById(R.id.editTexConfirmPass);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPass);
 
         backButton = findViewById(R.id.backButton);
         saveButton = findViewById(R.id.saveButton);
