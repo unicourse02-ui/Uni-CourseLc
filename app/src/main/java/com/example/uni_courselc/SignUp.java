@@ -1,5 +1,6 @@
 package com.example.uni_courselc;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -138,8 +139,37 @@ public class SignUp extends AppCompatActivity {
 
     public void onTermsAndConditionsClicked(View view) {
 
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Terms and Conditions");
+
+        String termsText = "Last Updated: January 2024\n\n" +
+                "1. Acceptance of Terms\n" +
+                "By creating an account on UniCourseLC, you agree to be bound by these Terms and Conditions.\n\n" +
+                "2. User Account\n" +
+                "You must provide accurate information when creating an account.\n\n" +
+                "3. Data Collection and Privacy\n" +
+                "We collect and process your personal data in accordance with our Privacy Policy.\n\n" +
+                "4. Use of Service\n" +
+                "You agree to use UniCourseLC for lawful purposes only.\n\n" +
+                "5. Intellectual Property\n" +
+                "All content is for personal, non-commercial use only.\n\n" +
+                "6. Limitation of Liability\n" +
+                "UniCourseLC provides university information for reference purposes only.\n\n" +
+                "7. Account Termination\n" +
+                "We reserve the right to suspend accounts that violate these terms.\n\n" +
+                "Contact: support@unicourselc.com";
+
+        builder.setMessage(termsText);
+        builder.setPositiveButton("I Agree", (dialog, which) -> {
+            CheckboxTerms.setChecked(true);
+            Toast.makeText(SignUp.this, "Terms and Conditions accepted", Toast.LENGTH_SHORT).show();
+        });
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         Toast.makeText(this, "Display Terms and Conditions", Toast.LENGTH_SHORT).show();
 
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void registerUser(String name, String username, String password, String id) {
