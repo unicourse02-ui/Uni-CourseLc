@@ -146,7 +146,7 @@ public class LandingPage extends AppCompatActivity {
                 Intent intent = new Intent(LandingPage.this, ComparisonPage.class);
                 intent.putExtra("id",user);
                 startActivity(intent);
-                finish();
+
             }
         });
 
@@ -266,7 +266,6 @@ public class LandingPage extends AppCompatActivity {
         intent.putExtra("username", currentUserUsername);
         intent.putExtra("password", currentUserPassword);
         startActivity(intent);
-        finish();
     }
 
     public void filter(String user){
@@ -281,7 +280,6 @@ public class LandingPage extends AppCompatActivity {
                 intent.putExtra("password", currentUserPassword);
                 intent.putExtra("name", currentUserName);
                 startActivity(intent);
-                finish();
 
             }
         });

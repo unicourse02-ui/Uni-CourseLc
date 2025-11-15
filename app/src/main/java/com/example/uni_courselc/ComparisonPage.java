@@ -75,7 +75,6 @@ public class ComparisonPage extends AppCompatActivity {
             Intent intent = new Intent(ComparisonPage.this, LandingPage.class);
             intent.putExtra("userId", currentUserId);
             startActivity(intent);
-            finish();
 
         });
 

@@ -174,7 +174,6 @@ public class Filter_Page extends AppCompatActivity {
                 Log.d("PASSWORRDD","PASSWORDD" + user + " " + id + " " + getIntent().getStringExtra("password"));
 
                 startActivity(intent);
-                finish();
             });
 
 

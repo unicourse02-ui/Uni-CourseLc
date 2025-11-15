@@ -58,14 +58,11 @@ public class EditDatabase extends AppCompatActivity {
     private void setupButtonListeners() {
         backButton.setOnClickListener(v->{
 
-
             Intent resultIntent = new Intent(EditDatabase.this, Profile_Page.class);
             resultIntent.putExtra("name", currentName);
             resultIntent.putExtra("username", currentUsername);
             resultIntent.putExtra("password", currentPassword);
             resultIntent.putExtra("userID", userId);
-
-
             startActivity(resultIntent);
 
         });

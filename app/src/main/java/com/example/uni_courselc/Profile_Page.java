@@ -63,8 +63,8 @@ public class Profile_Page extends AppCompatActivity {
 
         logoutButton.setOnClickListener(v->{
             Intent intent = new Intent(Profile_Page.this,MainActivity.class);
-            startActivity(intent);
             Toast.makeText(this, "Log out successful", Toast.LENGTH_SHORT).show();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
 
@@ -181,8 +181,6 @@ public class Profile_Page extends AppCompatActivity {
                     intent.putExtra("name",currentName);
                     intent.putExtra("username",currentUsername);
                     intent.putExtra("password",currentPassword);
-                    finish();
-
                     startActivity(intent);
 
 
