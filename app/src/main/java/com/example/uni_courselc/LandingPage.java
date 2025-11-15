@@ -39,7 +39,7 @@ public class LandingPage extends AppCompatActivity {
     ImageView homexml , userProfile , compareIcon;
 
     // Add these to store user data
-    private String currentUserName, currentUserUsername, currentUserPassword;
+    private String currentUserName, currentUserUsername, currentUserPassword,user;
     private User_Data userData;
 
     // Search functionality variables
@@ -63,9 +63,11 @@ public class LandingPage extends AppCompatActivity {
 
         ArrayList<String> selectedCourses = new ArrayList<>();
 
-        String user = getIntent().getStringExtra("username");
+         user = getIntent().getStringExtra("userId");
 
         fire= FirebaseDatabase.getInstance().getReference("users");
+
+
 
         fire.child(user).child("selectedCourses").get().addOnSuccessListener(dataSnapshot -> {
             for(DataSnapshot data : dataSnapshot.getChildren()){
@@ -144,6 +146,7 @@ public class LandingPage extends AppCompatActivity {
                 Intent intent = new Intent(LandingPage.this, ComparisonPage.class);
                 intent.putExtra("id",user);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -253,25 +256,17 @@ public class LandingPage extends AppCompatActivity {
         });
     }
 
+
     private void navigateToProfile() {
         Intent intent = new Intent(LandingPage.this, Profile_Page.class);
-
-        Log.d("testing","testing" + currentUserName);
-        Log.d("testing","testing" + currentUserPassword);
-
         // Pass the user data we have
-        if (currentUserName != null && currentUserUsername != null) {
-            intent.putExtra("name", currentUserName);
-            intent.putExtra("username", currentUserUsername);
-            intent.putExtra("password", currentUserPassword);
-        } else {
-            // Fallback: use data from intent if we don't have the fetched data
-            intent.putExtra("name", getIntent().getStringExtra("name"));
-            intent.putExtra("username", getIntent().getStringExtra("username"));
-            intent.putExtra("password", getIntent().getStringExtra("password"));
-        }
 
+        intent.putExtra("userID", user);
+        intent.putExtra("name", currentUserName);
+        intent.putExtra("username", currentUserUsername);
+        intent.putExtra("password", currentUserPassword);
         startActivity(intent);
+        finish();
     }
 
     public void filter(String user){
@@ -281,9 +276,15 @@ public class LandingPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LandingPage.this,Filter_Page.class);
-                intent.putExtra("username", user);
+                intent.putExtra("UserId", user);
+                intent.putExtra("username", currentUserUsername);
+                intent.putExtra("password", currentUserPassword);
+                intent.putExtra("name", currentUserName);
                 startActivity(intent);
+                finish();
+
             }
         });
+
     }
 }

@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class User_Data {
     DatabaseReference data;
+    String id;
 
     public User_Data(){
         data = FirebaseDatabase.getInstance().getReference("users");
@@ -25,6 +26,7 @@ public class User_Data {
                     String name = snapshot.child("name").getValue(String.class);
                     String username = snapshot.child("username").getValue(String.class);
                     String password = snapshot.child("password").getValue(String.class);
+                    id = snapshot.getKey();
 
 
 
@@ -42,11 +44,11 @@ public class User_Data {
     }
 
     // Method to update user data
-    public void updateUserData(String username, String name, String password, UpdateUserCallback callback) {
-        DatabaseReference userRef = data.child(username);
+    public void updateUserData(String username, String name, String password, String id, UpdateUserCallback callback) {
+        DatabaseReference userRef = data.child(id);
 
         // Create updated user data
-        HelperClass updatedUser = new HelperClass(name, username, password);
+        HelperClass updatedUser = new HelperClass(name, username, password,id);
 
         userRef.setValue(updatedUser)
                 .addOnSuccessListener(aVoid -> {

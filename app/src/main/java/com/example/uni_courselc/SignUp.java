@@ -1,8 +1,8 @@
 package com.example.uni_courselc;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -14,9 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.DatabaseReference;
 
@@ -24,8 +21,11 @@ import java.util.regex.Pattern;
 
 public class SignUp extends AppCompatActivity {
     DatabaseReference databaseRef;
-    MaterialButton Signup;
-    TextInputEditText RegisterUser, RegisterPass, RegisterName, RegisterConfirmPass;
+    Button Signup;
+    TextView RegisterUser;
+    TextView RegisterPass;
+    TextView RegisterName;
+    TextView RegisterConfirmPass;
     CheckBox CheckboxTerms;
 
     // Password pattern: at least 12 characters, at least one number, and at least one special character
@@ -60,12 +60,14 @@ public class SignUp extends AppCompatActivity {
                 String username = RegisterUser.getText().toString();
                 String password = RegisterPass.getText().toString();
                 String confirmPassword = RegisterConfirmPass.getText().toString();
+                String id = databaseRef.push().getKey();
+
 
                 if (!validateName() | !validateUsername() | !validatePassword() | !validateConfirmPassword() | !validateTerms()) {
                     // Validation failed
-                    return;
                 } else {
-                    registerUser(name, username, password);
+                    registerUser(name, username, confirmPassword,id);
+                    Log.d("testing key", "testing key" + id);
                 }
             }
         });
@@ -135,54 +137,26 @@ public class SignUp extends AppCompatActivity {
     }
 
     public void onTermsAndConditionsClicked(View view) {
-        showTermsAndConditionsDialog();
+
+        Toast.makeText(this, "Display Terms and Conditions", Toast.LENGTH_SHORT).show();
+
     }
 
-    private void showTermsAndConditionsDialog() {
-        // Create a simple dialog without custom layout inflation
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Terms and Conditions");
+    public void registerUser(String name, String username, String password, String id) {
+        HelperClass helperClass = new HelperClass(name, username, password,id);
 
-        String termsText = "Last Updated: January 2024\n\n" +
-                "1. Acceptance of Terms\n" +
-                "By creating an account on UniCourseLC, you agree to be bound by these Terms and Conditions.\n\n" +
-                "2. User Account\n" +
-                "You must provide accurate information when creating an account.\n\n" +
-                "3. Data Collection and Privacy\n" +
-                "We collect and process your personal data in accordance with our Privacy Policy.\n\n" +
-                "4. Use of Service\n" +
-                "You agree to use UniCourseLC for lawful purposes only.\n\n" +
-                "5. Intellectual Property\n" +
-                "All content is for personal, non-commercial use only.\n\n" +
-                "6. Limitation of Liability\n" +
-                "UniCourseLC provides university information for reference purposes only.\n\n" +
-                "7. Account Termination\n" +
-                "We reserve the right to suspend accounts that violate these terms.\n\n" +
-                "Contact: support@unicourselc.com";
-
-        builder.setMessage(termsText);
-        builder.setPositiveButton("I Agree", (dialog, which) -> {
-            CheckboxTerms.setChecked(true);
-            Toast.makeText(SignUp.this, "Terms and Conditions accepted", Toast.LENGTH_SHORT).show();
-        });
-        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    public void registerUser(String name, String username, String password) {
-        HelperClass helperClass = new HelperClass(name, username, password);
-
-        databaseRef.child(username).setValue(helperClass).addOnCompleteListener(task -> {
+        databaseRef.child(id).setValue(helperClass).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(SignUp.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUp.this, "User saved!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(SignUp.this, Filter_Page.class);
                 intent.putExtra("username", username);
+                intent.putExtra("UserId",id);
+                intent.putExtra("password",password);
+
                 startActivity(intent);
                 finish();
             } else {
-                Toast.makeText(SignUp.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUp.this, "Failed to save user", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -5,11 +5,21 @@ public class HelperClass {
     private String username;
     private String password;
 
+    private  String id;
+
     public HelperClass() {
         // Default constructor required for Firebase
     }
 
-    public HelperClass(String name, String username, String password) {
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public HelperClass(String name, String username, String password, String id) {
         this.name = name;
         this.username = username;
         this.password = password;

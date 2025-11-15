@@ -113,31 +113,25 @@ public class MainActivity extends AppCompatActivity {
                         System.out.println("DEBUG: User key: " + userSnapshot.getKey());
 
                         String passwordFromDB = userSnapshot.child("password").getValue(String.class);
-                        String nameFromDB = userSnapshot.child("name").getValue(String.class);
-                        String emailFromDB = userSnapshot.child("email").getValue(String.class);
+                        String userid = userSnapshot.getKey();
                         String usernameFromDB = userSnapshot.child("username").getValue(String.class);
 
-                        System.out.println("DEBUG: Password from DB: " + passwordFromDB);
-                        System.out.println("DEBUG: Name from DB: " + nameFromDB);
-                        System.out.println("DEBUG: Email from DB: " + emailFromDB);
-                        System.out.println("DEBUG: Username from DB: " + usernameFromDB);
+
 
                         if (passwordFromDB != null && passwordFromDB.equals(Password)) {
-
-
-
-                            // Login successful
+                            System.out.println("DEBUG: Password from DB: " + passwordFromDB);
+                            System.out.println("DEBUG: Email from DB: " + userid);
+                            System.out.println("DEBUG: Username from DB: " + usernameFromDB);
                             Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(MainActivity.this, LandingPage.class);
 
-                            intent.putExtra("name", nameFromDB);
-                            intent.putExtra("email", emailFromDB);
+                            intent.putExtra("userId", userid);
                             intent.putExtra("username", usernameFromDB);
                             intent.putExtra("password", passwordFromDB);
-                            intent.putExtra("userId",usernameFromDB);
                             startActivity(intent);
                             return;
                         }
+
                     }
 
                     // If we get here, password didn't match

@@ -1,7 +1,10 @@
 package com.example.uni_courselc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageButton;
+
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +26,8 @@ import java.util.List;
 public class ComparisonPage extends AppCompatActivity {
 
     RecyclerView recyclerView;
+
+    ImageButton back;
     List<University> savedList;
     savedUni adapter;
     String currentUserId; // Store user ID
@@ -38,6 +43,8 @@ public class ComparisonPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        back = findViewById(R.id.backButton);
 
         String id = getIntent().getStringExtra("id");
         currentUserId = id; // Store user ID
@@ -62,6 +69,17 @@ public class ComparisonPage extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         Log.d("TIS IS ISD","THISISD"+id);
+
+
+        back.setOnClickListener(v->{
+            Intent intent = new Intent(ComparisonPage.this, LandingPage.class);
+            intent.putExtra("userId", currentUserId);
+            startActivity(intent);
+            finish();
+
+        });
+
+
 
         DatabaseReference databaseRef = FirebaseDatabase.getInstance()
                 .getReference("users")

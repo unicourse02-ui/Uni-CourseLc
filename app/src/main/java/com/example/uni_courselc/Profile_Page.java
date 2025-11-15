@@ -25,11 +25,11 @@ public class Profile_Page extends AppCompatActivity {
     private TextView textViewNameValue, textViewEmailValue, textViewUsernameValue, textViewPasswordValue;
 
     // Buttons
-    private MaterialButton backButton, editProfileButton;
+    private MaterialButton backButton, editProfileButton,logoutButton;
 
     // User data manager
     private User_Data userData;
-    private String currentUsername, currentName, currentEmail, currentPassword;
+    private String currentUsername, currentName, currentEmail, currentPassword,userId;
 
     // Request code for EditProfile activity
     private static final int EDIT_PROFILE_REQUEST = 1;
@@ -60,6 +60,16 @@ public class Profile_Page extends AppCompatActivity {
         setupButtonListeners();
 
         Log.d("Profile_Page", "onCreate completed");
+
+        logoutButton.setOnClickListener(v->{
+            Intent intent = new Intent(Profile_Page.this,MainActivity.class);
+            startActivity(intent);
+            Toast.makeText(this, "Log out successful", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+            finish();
+
+        });
+
     }
 
     private void initializeViews() {
@@ -73,6 +83,7 @@ public class Profile_Page extends AppCompatActivity {
         textViewNameValue = findViewById(R.id.textViewNameValue);
         textViewUsernameValue = findViewById(R.id.textViewUsernameValue);
         textViewPasswordValue = findViewById(R.id.textViewPasswordValue);
+        logoutButton = findViewById(R.id.logoutButton);
 
         // Buttons
         backButton = findViewById(R.id.backButton);
@@ -82,7 +93,6 @@ public class Profile_Page extends AppCompatActivity {
     }
 
     private void getUserDataFromIntent() {
-        Log.d("Profile_Page", "Getting data from intent");
 
         // Get user data passed from previous activity
         Intent intent = getIntent();
@@ -91,55 +101,27 @@ public class Profile_Page extends AppCompatActivity {
             currentName = intent.getStringExtra("name");
             currentUsername = intent.getStringExtra("username");
             currentPassword = intent.getStringExtra("password");
+            userId = intent.getStringExtra("userID");
 
-            Log.d("Profile_Page", "Intent data - Name: " + currentName + ", Email: " + currentEmail + ", Username: " + currentUsername);
 
-            // If we have all data, update UI immediately
-            if (currentName != null && currentUsername != null) {
-                updateUserProfile(currentName, currentUsername, currentPassword);
-            }
+            Log.d("Profile_Page", "Intent data - Name: " + currentName + ", Email: " + currentUsername + ", Username: " + currentPassword + ", id: " + userId);
 
-            // Also fetch fresh data from database to ensure we have the latest
-            if (currentUsername != null) {
-                fetchUserDataFromDatabase(currentUsername);
-            }
-        } else {
-            Log.e("Profile_Page", "No intent data found");
-            Toast.makeText(this, "No user data found", Toast.LENGTH_SHORT).show();
+
+            updateUserProfile(currentName, currentUsername, currentPassword);
+
+
+
         }
     }
 
-    private void fetchUserDataFromDatabase(String username) {
-        Log.d("Profile_Page", "Fetching data from database for user: " + username);
 
-        userData.getAllUserData(username, new User_Data.GetAllDataCallback() {
-            @Override
-            public void onSuccess(String name, String username, String password) {
-                Log.d("Profile_Page", "Database fetch successful");
 
-                // Update the current user data with fresh data from database
-                currentName = name;
-                currentUsername = username;
-                currentPassword = password;
 
-                // Update UI with fresh data from database
-                updateUserProfile(name, username, password);
-            }
-
-            @Override
-            public void onFailed(String error) {
-                Log.e("Profile_Page", "Database fetch failed: " + error);
-                // If database fetch fails, we already have the intent data as fallback
-                Toast.makeText(Profile_Page.this, "Note: Using cached data", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void updateUserProfile(String name, String username, String password) {
         Log.d("Profile_Page", "Updating UI with user data");
 
         runOnUiThread(() -> {
-            // Update header section
             if (textViewFullName != null) {
                 textViewFullName.setText(name != null ? name : "Not Available");
             }
@@ -161,7 +143,7 @@ public class Profile_Page extends AppCompatActivity {
             if (textViewPasswordValue != null) {
                 // Mask the password for security (show only first 4 characters)
                 if (password != null && password.length() >= 4) {
-                    String maskedPassword = password.substring(0, 4) + "*******";
+                    String maskedPassword = "*******";
                     textViewPasswordValue.setText(maskedPassword);
                 } else {
                     textViewPasswordValue.setText("********");
@@ -193,25 +175,17 @@ public class Profile_Page extends AppCompatActivity {
             editProfileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("Profile_Page", "Edit Profile button clicked");
 
-                    // Check if we have user data
-                    if (currentName == null || currentUsername == null) {
-                        Log.e("Profile_Page", "Missing user data for EditProfile");
-                        Toast.makeText(Profile_Page.this, "User data not available", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    // Navigate to EditProfile activity using startActivityForResult
                     Intent intent = new Intent(Profile_Page.this, EditDatabase.class);
-                    Log.d("Profile_Page", "Intent created for EditProfile");
+                    intent.putExtra("userId",userId);
+                    intent.putExtra("name",currentName);
+                    intent.putExtra("username",currentUsername);
+                    intent.putExtra("password",currentPassword);
+                    finish();
 
-                    // Pass current user data to edit profile activity
-                    intent.putExtra("username", currentUsername);
-                    intent.putExtra("password", currentPassword);
+                    startActivity(intent);
 
-                    Log.d("Profile_Page", "Starting EditProfile activity for result");
-                    startActivityForResult(intent, EDIT_PROFILE_REQUEST);
+
                 }
             });
         } else {
@@ -249,12 +223,6 @@ public class Profile_Page extends AppCompatActivity {
     }
 
     private void goBackToLandingPage() {
-        // Check if we have the necessary data
-        if (currentUsername == null) {
-            Log.e("Profile_Page", "Cannot go back to LandingPage: username is null");
-            Toast.makeText(this, "Error: User data missing", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         Intent intent = new Intent(Profile_Page.this, LandingPage.class);
 
@@ -262,30 +230,13 @@ public class Profile_Page extends AppCompatActivity {
         intent.putExtra("name", currentName);
         intent.putExtra("username", currentUsername);
         intent.putExtra("password", currentPassword);
-
-        // Clear the back stack and start fresh
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-
-        Log.d("Profile_Page", "Navigating back to LandingPage with user: " + currentUsername);
-        startActivity(intent);
+        intent.putExtra("userId",userId);
         finish();
+        startActivity(intent);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("Profile_Page", "onResume called");
 
-        // Refresh data when returning from edit profile
-        if (currentUsername != null) {
-            fetchUserDataFromDatabase(currentUsername);
-        }
-    }
 
-    @Override
-    public void onBackPressed() {
-        Log.d("Profile_Page", "Back button pressed");
-        // Handle back button press - same as back button
-        goBackToLandingPage();
-    }
+
+
 }

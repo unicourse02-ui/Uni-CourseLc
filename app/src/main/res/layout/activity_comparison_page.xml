@@ -9,18 +9,41 @@
     android:background="@color/white"
     tools:context=".ComparisonPage">
 
-    <TextView
+    <LinearLayout
+        android:layout_width="match_parent"
         android:id="@+id/title"
-        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Saved Universities"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:padding="16dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="12dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/backarrow"
+            android:tint="@android:color/black"
+            android:scaleType="fitCenter"
+            android:contentDescription="Go Back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saved University List"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginStart="12dp"/>
+
+    </LinearLayout>
+
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/savedUniRecyclerView"

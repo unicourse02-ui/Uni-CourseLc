@@ -71,8 +71,7 @@ public class Filter_Page extends AppCompatActivity {
 
         Intent intent2 = getIntent();
         String user = intent2.getStringExtra("username");
-
-
+        String id = intent2.getStringExtra("UserId");
 
 
 
@@ -151,7 +150,7 @@ public class Filter_Page extends AppCompatActivity {
                     chipg.addView(chips);
                     chips.setOnCheckedChangeListener((buttonView, isChecked) -> {
                         choice_counter();
-                        delete(user);
+                        delete(id);
 
                     });
 
@@ -164,23 +163,22 @@ public class Filter_Page extends AppCompatActivity {
             btn.setOnClickListener(v -> {
                 DatabaseReference dbRef = FirebaseDatabase.getInstance()
                         .getReference("users")
-                        .child(user).child("selectedCourses");
+                        .child(id).child("selectedCourses");
 
                 dbRef.setValue(FilteredSelected_Courses);
                 Intent intent = new Intent(Filter_Page.this, LandingPage.class);
-                intent.putExtra("userId", user);
+                intent.putExtra("userId", id);
+                intent.putExtra("username",user);
+                intent.putExtra("password",getIntent().getStringExtra("password"));
 
-                // ADD THESE LINES - Pass user data from Filter_Page to LandingPage
-                intent.putExtra("name", getIntent().getStringExtra("name"));
-                intent.putExtra("email", getIntent().getStringExtra("email"));
-                intent.putExtra("username", getIntent().getStringExtra("username"));
-                intent.putExtra("password", getIntent().getStringExtra("password"));
+                Log.d("PASSWORRDD","PASSWORDD" + user + " " + id + " " + getIntent().getStringExtra("password"));
 
                 startActivity(intent);
+                finish();
             });
 
 
-            checked( user);
+            checked(id);
 
 
             choice_counter();
@@ -199,36 +197,36 @@ public class Filter_Page extends AppCompatActivity {
 
             ArrayList<String> courses = new ArrayList<>();
 
-                for(DataSnapshot snap: dataSnapshot.getChildren()){
-                    String coursename = snap.getValue(String.class);
+            for(DataSnapshot snap: dataSnapshot.getChildren()){
+                String coursename = snap.getValue(String.class);
 
-                    if(coursename != null){
-                        courses.add(coursename);
+                if(coursename != null){
+                    courses.add(coursename);
+                }
+
+            }
+
+
+
+
+            for(ChipGroup chips : chipgroup){
+                for(int i = 0 ; i < chips.getChildCount(); i++){
+                    Chip chip = (Chip) chips.getChildAt(i);
+                    String courseNAme = chip.getText().toString();
+
+                    if(!chip.isChecked() && courses.contains(courseNAme)){
+                        FilteredSelected_Courses.remove(courseNAme);
+
                     }
+
 
                 }
 
 
 
 
-                for(ChipGroup chips : chipgroup){
-                    for(int i = 0 ; i < chips.getChildCount(); i++){
-                        Chip chip = (Chip) chips.getChildAt(i);
-                        String courseNAme = chip.getText().toString();
 
-                        if(!chip.isChecked() && courses.contains(courseNAme)){
-                            FilteredSelected_Courses.remove(courseNAme);
-
-                        }
-
-
-                    }
-
-
-
-
-
-                }
+            }
 
 
         });
@@ -307,8 +305,8 @@ public class Filter_Page extends AppCompatActivity {
         }
 
         for(String unfiltered: Selected_Course){
-                if(!FilteredSelected_Courses.contains(unfiltered)){
-                    FilteredSelected_Courses.add(unfiltered);
+            if(!FilteredSelected_Courses.contains(unfiltered)){
+                FilteredSelected_Courses.add(unfiltered);
 
                 btn.setText(counter + " of " + total + "  Selected" + FilteredSelected_Courses);
 
