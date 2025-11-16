@@ -84,7 +84,6 @@ public class LandingPage extends AppCompatActivity {
         currentUserUsername = getIntent().getStringExtra("username");
         currentUserPassword = getIntent().getStringExtra("password");
 
-        // Fetch user data from database (this ensures we have the latest data)
         if (user != null) {
             fetchUserDataFromDatabase(user);
         }
@@ -166,7 +165,6 @@ public class LandingPage extends AppCompatActivity {
                 currentSearchQuery = s.toString().trim();
                 isSearching = !currentSearchQuery.isEmpty();
 
-                // Notify fragments about search query change
                 notifyFragmentsAboutSearch();
             }
 
@@ -184,24 +182,19 @@ public class LandingPage extends AppCompatActivity {
     }
 
     private void notifyFragmentsAboutSearch() {
-        // Get current fragment and notify about search
         int currentItem = viewPager2.getCurrentItem();
-
-        // We'll use a Broadcast or Interface pattern to communicate with fragments
-        // For now, we'll update the bundle and refresh fragments
 
         refreshCurrentFragment();
     }
 
     private void refreshCurrentFragment() {
-        // This method will trigger the current fragment to refresh with search filter
-        // We'll implement this by recreating the fragment with updated data
+
         int currentPosition = viewPager2.getCurrentItem();
 
         // Get the existing bundle and update it with search info
         Bundle bundle = new Bundle();
         bundle.putStringArrayList("SelectedCourses", getIntent().getStringArrayListExtra("SelectedCourses"));
-        bundle.putString("userId", getIntent().getStringExtra("username"));
+        bundle.putString("userId", getIntent().getStringExtra("userId"));
         bundle.putBoolean("isSearching", isSearching);
         bundle.putString("searchQuery", currentSearchQuery);
 
