@@ -81,7 +81,7 @@ public class EditDatabase extends AppCompatActivity {
 
 
 
-        if (updatedName.isEmpty()) {
+        if (updatedName.equals(currentName)) {
             editTextName.setError("Name cannot be empty");
             return;
         }
