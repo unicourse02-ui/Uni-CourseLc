@@ -62,7 +62,7 @@ public class EditDatabase extends AppCompatActivity {
             resultIntent.putExtra("name", currentName);
             resultIntent.putExtra("username", currentUsername);
             resultIntent.putExtra("password", currentPassword);
-            resultIntent.putExtra("userID", userId);
+            resultIntent.putExtra("UserId", userId);
             startActivity(resultIntent);
 
         });
@@ -126,6 +126,7 @@ public class EditDatabase extends AppCompatActivity {
                     resultIntent.putExtra("name", name);
                     resultIntent.putExtra("username", username);
                     resultIntent.putExtra("password", password);
+                    resultIntent.putExtra("userID", userId);
                     startActivity(resultIntent);
                     finish();
                 })

@@ -94,7 +94,6 @@ public class Profile_Page extends AppCompatActivity {
 
     private void getUserDataFromIntent() {
 
-        // Get user data passed from previous activity
         Intent intent = getIntent();
 
         if (intent != null) {
