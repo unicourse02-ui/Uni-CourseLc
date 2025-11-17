@@ -3,6 +3,7 @@ package com.example.uni_courselc;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -66,6 +67,8 @@ public class EditProfile extends AppCompatActivity {
         currentUsername = intent.getStringExtra("username");
         currentPassword = intent.getStringExtra("password");
         userId = intent.getStringExtra("UserId");
+
+        Log.d("EditProfile", "User data - Name: " + currentName + ", Username: " + currentUsername + ", UserId: " + userId);
 
         if (currentUsername != null) editTextUsername.setText(currentUsername);
         if (currentName != null) editTextName.setText(currentName);
@@ -139,7 +142,7 @@ public class EditProfile extends AppCompatActivity {
         if (!updatedUsername.equals(currentUsername)) {
             checkUsernameAvailability(updatedUsername, updatedName, finalPassword);
         } else {
-            updateUserInDatabase(updatedName, finalPassword, currentUsername);
+            updateUserInDatabase(updatedName, finalPassword, updatedUsername);
         }
     }
 
@@ -216,7 +219,8 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void checkUsernameAvailability(String newUsername, String name, String password) {
-        databaseRef.child(newUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+        // Check if the new username already exists in the database
+        databaseRef.orderByChild("username").equalTo(newUsername).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
@@ -231,53 +235,97 @@ public class EditProfile extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(EditProfile.this, "Error checking username availability", Toast.LENGTH_SHORT).show();
+                Log.e("EditProfile", "Database error: " + databaseError.getMessage());
             }
         });
     }
 
     private void updateUserWithNewUsername(String newUsername, String name, String password) {
-        // First, get current user data
-        databaseRef.child(currentUsername).addListenerForSingleValueEvent(new ValueEventListener() {
+        // First, get current user data to preserve all fields
+        databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     // Create new user node with updated username
-                    HelperClass updatedUser = new HelperClass(name, newUsername, password, userId);
+                    HelperClass updatedUser = dataSnapshot.getValue(HelperClass.class);
+                    if (updatedUser != null) {
+                        updatedUser.setName(name);
+                        updatedUser.setUsername(newUsername);
+                        updatedUser.setPassword(password);
 
-                    databaseRef.child(newUsername).setValue(updatedUser)
-                            .addOnSuccessListener(aVoid -> {
-                                // Delete old user node
-                                databaseRef.child(currentUsername).removeValue()
-                                        .addOnSuccessListener(aVoid2 -> {
-                                            handleSuccess(name, newUsername, password);
-                                        })
-                                        .addOnFailureListener(e -> {
-                                            Toast.makeText(EditProfile.this, "Error removing old username", Toast.LENGTH_SHORT).show();
-                                        });
-                            })
-                            .addOnFailureListener(e -> {
-                                Toast.makeText(EditProfile.this, "Error updating username", Toast.LENGTH_SHORT).show();
-                            });
+                        // Create new node with new username as key
+                        databaseRef.child(newUsername).setValue(updatedUser)
+                                .addOnSuccessListener(aVoid -> {
+                                    // Delete old user node
+                                    databaseRef.child(userId).removeValue()
+                                            .addOnSuccessListener(aVoid2 -> {
+                                                // Update userId to new username for consistency
+                                                userId = newUsername;
+                                                handleSuccess(name, newUsername, password);
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.e("EditProfile", "Error removing old user: " + e.getMessage());
+                                                Toast.makeText(EditProfile.this, "Error updating profile", Toast.LENGTH_SHORT).show();
+                                            });
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("EditProfile", "Error creating new user: " + e.getMessage());
+                                    Toast.makeText(EditProfile.this, "Error updating username", Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                } else {
+                    Toast.makeText(EditProfile.this, "User data not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(EditProfile.this, "Error loading user data", Toast.LENGTH_SHORT).show();
+                Log.e("EditProfile", "Database error: " + databaseError.getMessage());
             }
         });
     }
 
     private void updateUserInDatabase(String name, String password, String username) {
-        HelperClass updatedUser = new HelperClass(name, username, password, userId);
+        // Get current user data first to preserve all fields
+        databaseRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    HelperClass updatedUser = dataSnapshot.getValue(HelperClass.class);
+                    if (updatedUser != null) {
+                        updatedUser.setName(name);
+                        updatedUser.setPassword(password);
 
-        databaseRef.child(username).setValue(updatedUser)
-                .addOnSuccessListener(aVoid -> {
-                    handleSuccess(name, username, password);
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(EditProfile.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                        databaseRef.child(userId).setValue(updatedUser)
+                                .addOnSuccessListener(aVoid -> {
+                                    handleSuccess(name, username, password);
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("EditProfile", "Failed to update profile: " + e.getMessage());
+                                    Toast.makeText(EditProfile.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                } else {
+                    // If user doesn't exist at userId, try creating with basic data
+                    HelperClass newUser = new HelperClass(name, username, password, userId);
+                    databaseRef.child(userId).setValue(newUser)
+                            .addOnSuccessListener(aVoid -> {
+                                handleSuccess(name, username, password);
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("EditProfile", "Failed to create profile: " + e.getMessage());
+                                Toast.makeText(EditProfile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("EditProfile", "Error loading user data: " + databaseError.getMessage());
+                Toast.makeText(EditProfile.this, "Error loading user data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void handleSuccess(String name, String username, String password) {
@@ -287,6 +335,7 @@ public class EditProfile extends AppCompatActivity {
         resultIntent.putExtra("name", name);
         resultIntent.putExtra("username", username);
         resultIntent.putExtra("password", password);
+        resultIntent.putExtra("UserId", userId);
 
         setResult(RESULT_OK, resultIntent);
         finish();
