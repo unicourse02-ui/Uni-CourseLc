@@ -87,6 +87,8 @@ public class EditDatabase extends AppCompatActivity {
         }
 
 
+
+
         if (!updatedPassword.isEmpty() || !confirmPassword.isEmpty()) {
 
             if (updatedPassword.length() < 12) {
